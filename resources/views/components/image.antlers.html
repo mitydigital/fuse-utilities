@@ -1,0 +1,47 @@
+{{ if image }}
+{{ fuse:image :url="image" }}
+<picture>
+    {{ if !process }}
+
+    <img alt="{{ alt | entities }}"
+         height="{{ height }}"
+         src="{{ url }}"
+         width="{{ width }}"
+         {{ if cover }}
+         class="object-cover w-full h-full {{ class }}"
+         style="object-position: {{ focus | background_position }}"
+         {{ else }}
+         class="{{ class }}"
+         {{ /if }}
+         {{ unless alt }} aria-hidden="true" {{ /unless }}
+         {{ if lazy }} loading="lazy" {{ /if }}
+    >
+
+    {{ else }}
+
+    {{ foreach:formats as="format|mime_type" }}
+    <source srcset="{{ srcset scope='size' }}
+                {{ glide:image :format='format' :width='size:width' :height='size:height' fit='crop_focal' quality='{ size:quality }' }} {{ size:width }}w{{ !last ?= ',' }}
+            {{ /srcset }}"
+            sizes="{{ sizes ?? '(min-width: 768px) 50vw, 100vw' }}"
+            type="{{ mime_type }}">
+    {{ /foreach:formats }}
+
+    <img alt="{{ alt | entities }}"
+         height="{{ 1024 * original_ratio }}"
+         src="{{ glide:image width='1024' height='{ 1024 * original_ratio }' fit='crop_focal' }}"
+         width="1024"
+         {{ if cover }}
+         class="object-cover w-full h-full {{ class }}"
+         style="object-position: {{ focus | background_position }}"
+         {{ else }}
+         class="{{ class }}"
+         {{ /if }}
+         {{ unless alt }} aria-hidden="true" {{ /unless }}
+         {{ if lazy }} loading="lazy" {{ /if }}
+    >
+
+    {{ /if }}
+</picture>
+{{ /fuse:image }}
+{{ /if }}

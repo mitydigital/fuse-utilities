@@ -1,0 +1,59 @@
+title: 'Metadata: Sitemap'
+fields:
+  -
+    handle: sitemap_include
+    field:
+      options:
+        default: 'Use default'
+        include: Include
+        exclude: Exclude
+      default: default
+      type: button_group
+      display: 'Include in sitemap?'
+      icon: button_group
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+      validate:
+        - required
+  -
+    handle: sitemap_change_frequency
+    field:
+      options:
+        default: 'Use default'
+        always: 'Always (stock market data, social media)'
+        hourly: 'Hourly (major news site, weather, forums)'
+        daily: 'Daily (blog index, message boards)'
+        weekly: 'Weekly (product pages, directories)'
+        monthly: 'Monthly (FAQs, occasionally updated articles)'
+        yearly: 'Yearly (contact, about)'
+      taggable: false
+      push_tags: false
+      multiple: false
+      clearable: false
+      searchable: true
+      cast_booleans: false
+      default: default
+      type: select
+      display: 'Change Frequency'
+      icon: select
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+  -
+    handle: sitemap_priority
+    field:
+      display: Priority
+      type: float
+      icon: float
+      instructions: 'A value between 0.0 and 1.0. Leave blank to use default.'
+      width: 33
+      listable: hidden
+      validate:
+        - 'max:1'
+        - 'min:0'
+      instructions_position: above
+      visibility: visible
+      hide_display: false

@@ -1,0 +1,65 @@
+title: 'Metadata: Social Sharing'
+fields:
+  -
+    handle: social_title
+    field:
+      input_type: text
+      antlers: true
+      type: text
+      display: Title
+      icon: text
+      instructions: "The social sharing title. When omitted, will fall back to the entry's metadata title."
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+  -
+    handle: social_description
+    field:
+      antlers: true
+      type: textarea
+      display: Description
+      icon: textarea
+      instructions: "This entry's social description. When omitted, will default to the entry's metadata description."
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+  -
+    handle: og_image
+    field:
+      max_files: 1
+      mode: list
+      container: site
+      restrict: false
+      allow_uploads: true
+      show_filename: true
+      show_set_alt: true
+      type: assets
+      display: 'Social image'
+      icon: assets
+      instructions: "The entry-specific Social image. This overrides the site's default Social image. The recommended size is 1200x630px. This image will be focal cropped to this dimension."
+      width: 50
+      listable: hidden
+      instructions_position: below
+      visibility: visible
+      hide_display: false
+  -
+    handle: twitter_image
+    field:
+      max_files: 1
+      mode: list
+      container: site
+      restrict: false
+      allow_uploads: true
+      show_filename: true
+      show_set_alt: true
+      type: assets
+      display: 'Twitter image'
+      icon: assets
+      instructions: "The entry-specific Twitter image. This overrides the site's default Twitter image. Images should have an aspect ratio of 2:1 with minimum dimensions of 300x157. This image will be focal cropped to this dimension."
+      width: 50
+      listable: hidden
+      instructions_position: below
+      visibility: visible
+      hide_display: false

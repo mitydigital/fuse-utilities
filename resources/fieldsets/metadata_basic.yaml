@@ -1,0 +1,42 @@
+title: 'Metadata: Basic'
+fields:
+  -
+    handle: meta_title
+    field:
+      input_type: text
+      antlers: true
+      type: text
+      display: Title
+      icon: text
+      instructions: "This entry's title, defaults to the entry title and site name when not explicitly set."
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+  -
+    handle: meta_description
+    field:
+      antlers: true
+      type: textarea
+      display: Description
+      icon: textarea
+      instructions: "This entry's meta description. Aim for around 160 characters."
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+  -
+    handle: meta_include_title_suffix
+    field:
+      options:
+        include: Include
+        hide: Hide
+      default: include
+      type: button_group
+      display: 'Include site name?'
+      icon: button_group
+      instructions: "When enabled, the site's name will be added automatically to the title tag. You can change the site name in the Settings."
+      listable: false
+      instructions_position: above
+      visibility: visible
+      hide_display: false

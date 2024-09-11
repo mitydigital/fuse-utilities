@@ -1,0 +1,80 @@
+title: 'Metadata: Advanced'
+fields:
+  -
+    handle: noindex
+    field:
+      default: false
+      type: toggle
+      display: 'No index'
+      icon: toggle
+      instructions: 'Instruct crawlers not to index this entry.'
+      width: 50
+      listable: hidden
+      instructions_position: below
+      visibility: visible
+      hide_display: false
+  -
+    handle: nofollow
+    field:
+      default: false
+      type: toggle
+      display: 'No Follow'
+      icon: toggle
+      instructions: 'Instruct crawlers not to follow links on this page.'
+      width: 50
+      listable: hidden
+      instructions_position: below
+      visibility: visible
+      hide_display: false
+  -
+    handle: canonical_type
+    field:
+      options:
+        current: 'Current Entry'
+        internal: 'Another Entry'
+        external: 'External URL'
+      default: current
+      type: button_group
+      display: 'Canonical URL'
+      icon: button_group
+      instructions: 'Where should the canonical URL for this entry point to.'
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+  -
+    handle: canonical_entry
+    field:
+      max_items: 1
+      mode: default
+      create: true
+      type: entries
+      display: Entry
+      icon: entries
+      instructions: 'When this entry contains duplicate content, set the Entry to be the original entry.'
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+      validate:
+        - 'required_if:canonical_type,internal'
+      if:
+        canonical_type: 'equals internal'
+  -
+    handle: canonical_url
+    field:
+      input_type: url
+      antlers: false
+      type: text
+      display: 'External Canonical URL'
+      icon: text
+      instructions: 'What is the external canonical URL of this entry?'
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+      validate:
+        - 'required_if:canonical_type,external'
+        - url
+      if:
+        canonical_type: 'equals external'

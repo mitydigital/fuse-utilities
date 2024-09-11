@@ -1,0 +1,47 @@
+{
+    "name": "mitydigital/fuse-utilities",
+    "description": "Utilities for Mity Digital's Fuse Starter Kit.",
+    "type": "statamic-addon",
+    "keywords": [
+        "statamic"
+    ],
+    "autoload": {
+        "psr-4": {
+            "MityDigital\\FuseUtilities\\": "src"
+        }
+    },
+    "license": "GPL-3.0-only",
+    "authors": [
+        {
+            "name": "Marty Friedel"
+        }
+    ],
+    "require": {
+	    "php": "^8.3",
+        "statamic/cms": "^5.0"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.10"
+    },
+    "extra": {
+        "statamic": {
+            "name": "Fuse Utilities",
+            "description": "Utilities for Mity Digital's Fuse Starter Kit."
+        },
+        "laravel": {
+            "providers": [
+                "MityDigital\\FuseUtilities\\ServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "pint": [
+            "./vendor/bin/pint"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "pixelfear/composer-dist-plugin": true
+        }
+    }
+}
