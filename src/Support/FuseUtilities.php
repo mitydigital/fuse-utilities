@@ -4,6 +4,7 @@ namespace MityDigital\FuseUtilities\Support;
 
 use Statamic\Facades\GlobalSet;
 use Statamic\Facades\Site;
+use Statamic\Forms\Form;
 
 class FuseUtilities
 {
@@ -12,7 +13,7 @@ class FuseUtilities
         return 'fuse-utilities::widgets.images-without-alt';
     }
 
-    public function isCaptchaEnabled(?string $site = null, ?string $environment = null, ?string $form = null): bool
+    public function isCaptchaEnabled(?string $site = null, ?string $environment = null, Form|string $form = null): bool
     {
         $forms = GlobalSet::findByHandle('forms')
             ->in($site ?? Site::current()->handle);
@@ -23,7 +24,12 @@ class FuseUtilities
         if ($enabled && $form) {
             $excludedForms = $forms->get('excluded_forms', []);
 
-            if (in_array($form, $excludedForms)) {
+            $handle = $form;
+            if (is_object($form) && get_class($form) === Form::class) {
+                $handle = $form->handle();
+            }
+
+            if (in_array($handle, $excludedForms)) {
                 return false;
             }
         }
