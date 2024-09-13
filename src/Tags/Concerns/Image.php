@@ -27,7 +27,6 @@ trait Image
         // load the asset
         $asset = AssetAPI::find($asset);
 
-        //dd(get_class_methods($asset));
         $data = [
             ...$asset->toAugmentedArray(),
             'formats' => [
@@ -127,7 +126,6 @@ trait Image
         //
         $aspectRatios = collect(explode(' ', trim($this->getParamOrContext('aspect_ratio'))))
             ->mapWithKeys(function (string $ratio) {
-                ray($ratio);
                 if (Str::substrCount($ratio, '/') === 1) {
                     $ratio = Str::trim($ratio);
                     $prefix = 'base';
