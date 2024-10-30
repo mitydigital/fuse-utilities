@@ -4,6 +4,7 @@ namespace MityDigital\FuseUtilities\Listeners;
 
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Cache;
+use MityDigital\FuseUtilities\Facades\FuseUtilities;
 use Statamic\Events\AssetDeleted;
 use Statamic\Events\AssetSaving;
 use Statamic\Events\AssetUploaded;
@@ -29,10 +30,10 @@ class ImagesWithoutAltListener
         }
 
         // only clear if the alt is dirty
-        $events->listen(AssetSaving::class, [ImagesMissingAltListener::class, 'handleSaving']);
+        $events->listen(AssetSaving::class, [ImagesWithoutAltListener::class, 'handleSaving']);
 
         // simply clear the cache
-        $events->listen(AssetDeleted::class, [ImagesMissingAltListener::class, 'handleChange']);
-        $events->listen(AssetUploaded::class, [ImagesMissingAltListener::class, 'handleChange']);
+        $events->listen(AssetDeleted::class, [ImagesWithoutAltListener::class, 'handleChange']);
+        $events->listen(AssetUploaded::class, [ImagesWithoutAltListener::class, 'handleChange']);
     }
 }
