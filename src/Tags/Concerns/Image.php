@@ -163,6 +163,7 @@ trait Image
         // SRCSET
         //
         $max = $this->getParamOrContext('max', '1440');
+        $min = $this->getParamOrContext('min', '320');
 
         $widths = [
             320,
@@ -182,8 +183,8 @@ trait Image
 
         $srcset = [];
         foreach ($widths as $width) {
-            // only process if width is less than or equal to max
-            if ($width <= $max) {
+            // only process if width is less than or equal to max and min
+            if ($width >= $min && $width <= $max) {
                 $ratio = [
                     'width' => $width,
                     'height' => null,
