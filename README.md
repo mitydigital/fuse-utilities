@@ -124,6 +124,7 @@ to help with the `<picture>` element.
 
 It will take advantage of these params or context. If a param is not found, the context will be used:
 - `aspect_ratio`
+- `min`
 - `max`
 - `quality`
 - `sizes`
@@ -132,6 +133,7 @@ The image component accepts these parameters:
 - `aspect_ratio`, a string of responsive aspect ratios
 - `cover`, default `false`, or set to `true` to fill the parent container
 - `lazy`, default `false`, or set to `true` to lazy load image
+- `min`, the minimum size to render, default to 320
 - `max`, the maximum size to render, default to 1440
 - `quality`, a string of responsive qualities
 - `sizes`, override the sizes property
