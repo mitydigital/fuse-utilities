@@ -46,6 +46,10 @@ trait Scripts
                             $script .= ' defer';
                         }
 
+                        if (isset($javascript['additional_attributes']) && $javascript['additional_attributes']) {
+                            $script .= ' ' . $javascript['additional_attributes'];
+                        }
+
                         $script .= ' src="'.$javascript['src'].'"></script>';
 
                         return $script;
