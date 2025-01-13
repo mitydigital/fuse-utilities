@@ -39,26 +39,6 @@ fields:
       display: 'Social image'
       icon: assets
       instructions: "The entry-specific Social image. This overrides the site's default Social image. The recommended size is 1200x630px. This image will be focal cropped to this dimension."
-      width: 50
-      listable: hidden
-      instructions_position: below
-      visibility: visible
-      hide_display: false
-  -
-    handle: twitter_image
-    field:
-      max_files: 1
-      mode: list
-      container: site
-      restrict: false
-      allow_uploads: true
-      show_filename: true
-      show_set_alt: true
-      type: assets
-      display: 'Twitter image'
-      icon: assets
-      instructions: "The entry-specific Twitter image. This overrides the site's default Twitter image. Images should have an aspect ratio of 2:1 with minimum dimensions of 300x157. This image will be focal cropped to this dimension."
-      width: 50
       listable: hidden
       instructions_position: below
       visibility: visible
