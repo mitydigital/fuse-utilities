@@ -32,38 +32,9 @@ trait Scripts
         ) {
             // only process the scripts for the given location
             return collect($metadata->get('javascript', []))
-                ->filter(fn ($javascript) => $javascript['location'] === $location && $javascript['enabled'])
-                ->map(function ($javascript) {
-                    if ($javascript['type'] === 'script_tag') {
-                        // make a script tag
-                        $script = '<script';
-
-                        if ($javascript['asynchronous']) {
-                            $script .= ' async';
-                        }
-
-                        if ($javascript['defer']) {
-                            $script .= ' defer';
-                        }
-
-                        if (isset($javascript['additional_attributes']) && $javascript['additional_attributes']) {
-                            $script .= ' ' . $javascript['additional_attributes'];
-                        }
-
-                        $script .= ' src="'.$javascript['src'].'"></script>';
-
-                        return $script;
-                    }
-
-                    if ($javascript['type'] === 'inline_script') {
-                        // output the included javascript inline
-                        $script = '<script type="text/javascript">'."\r\n";
-                        $script .= $javascript['script']['code'];
-                        $script .= "\r\n".'</script>';
-
-                        return $script;
-                    }
-                })->join("\r\n");
+                ->filter(fn (array $javascript) => $javascript['location'] === $location && $javascript['enabled'])
+                ->map(fn (array $javascript) => $javascript['script'])
+                ->join("\r\n");
         }
     }
 }

@@ -7,6 +7,8 @@ use MityDigital\FuseUtilities\Facades\FuseUtilities;
 use Statamic\Facades\Antlers;
 use Statamic\Facades\GlobalSet;
 use Statamic\Facades\Site;
+use Statamic\Fieldtypes\Bard;
+use Statamic\Fieldtypes\Bard\Augmentor;
 
 trait Form
 {
@@ -128,11 +130,21 @@ trait Form
 
         // get the override
         foreach ($global->get('message_overrides', []) as $override) {
-            if ($override['form'] === $form && $override['type'] === $type) {
+            if ($override['form'] === $form->handle() && $override['type'] === $type) {
                 $message = $override['message'];
             }
         }
 
-        return Antlers::parse($message)->__toString();
+        if (is_array($message)) {
+            $bard = (new Bard())->setField($global->blueprint()->field($fieldHandle));
+
+            $content = (new Augmentor($bard))
+                ->augment($message);
+
+            return $content;
+        } else {
+
+            return Antlers::parse($message)->__toString();
+        }
     }
 }
