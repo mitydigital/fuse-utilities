@@ -1,6 +1,6 @@
 {{ if image }}
 {{ fuse:image :url="image" }}
-<picture>
+<picture {{ if picture_class }}class="{{ picture_class }}"{{ /if }}>
     {{ if !process }}
 
     <img alt="{{ alt | entities }}"
