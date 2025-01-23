@@ -122,6 +122,8 @@ The `image` tag returns dynamic configuration options for use with the image com
 It will return all of the Asset's properties (just like the existing `asset` tag), plus additional properties
 to help with the `<picture>` element.
 
+You can pass `class` to the `img` element, and `picture_class` to the `picture` element.
+
 It will take advantage of these params or context. If a param is not found, the context will be used:
 - `aspect_ratio`
 - `min`
