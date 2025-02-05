@@ -139,6 +139,7 @@ The image component accepts these parameters:
 - `max`, the maximum size to render, default to 1440
 - `quality`, a string of responsive qualities
 - `sizes`, override the sizes property
+- `fit`, one of Statamic's "fit" properties, defaults to "crop_focal"
 
 The `aspect_ratio` and `quality` properties accept the standard Tailwind prefixes for responsive behaviour, such as:
 ```antlers
