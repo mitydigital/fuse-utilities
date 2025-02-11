@@ -136,7 +136,7 @@ trait Form
         }
 
         if (is_array($message)) {
-            $bard = (new Bard())->setField($global->blueprint()->field($fieldHandle));
+            $bard = (new Bard)->setField($global->blueprint()->field($fieldHandle));
 
             $content = (new Augmentor($bard))
                 ->augment($message);

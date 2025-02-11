@@ -13,10 +13,10 @@ class ImagesWithoutAltListener
 {
     public function handleSaving(AssetSaving $event)
     {
-        if (!$this->hasImagesWithoutAltWidget()) {
+        if (! $this->hasImagesWithoutAltWidget()) {
             return;
         }
-        
+
         if ($event->asset->isDirty('alt')) {
             Cache::forget(FuseUtilities::getImagesMissingAltCache());
         }
@@ -24,20 +24,21 @@ class ImagesWithoutAltListener
 
     public function handleChange(AssetDeleted|AssetUploaded $event)
     {
-        if (!$this->hasImagesWithoutAltWidget()) {
+        if (! $this->hasImagesWithoutAltWidget()) {
             return;
         }
 
         Cache::forget(FuseUtilities::getImagesMissingAltCache());
     }
 
-    protected function hasImagesWithoutAltWidget() {
+    protected function hasImagesWithoutAltWidget()
+    {
         return collect(config('statamic.cp.widgets', []))->contains('type', 'images_without_alt');
     }
 
     public function subscribe(Dispatcher $events)
     {
-        if (!$this->hasImagesWithoutAltWidget()) {
+        if (! $this->hasImagesWithoutAltWidget()) {
             return;
         }
 
