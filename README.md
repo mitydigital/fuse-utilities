@@ -38,6 +38,9 @@ With each class, replace the colour with the string `[colour]` to inject the dif
 This is intended to make working with colours easier by generating the different classes to a HTML file for the 
 Tailwind process to pick up and include in the site's CSS.
 
+You can also pass a `version` of either `3` or `4` - this is separating generation logic for different Tailwind 
+versions. If omitted, will default to v3.
+
 ## Listeners
 
 ### Prevent Deleting Mounts

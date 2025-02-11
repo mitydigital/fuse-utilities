@@ -13,7 +13,7 @@ class FuseUtilities
         return 'fuse-utilities::widgets.images-without-alt';
     }
 
-    public function isCaptchaEnabled(?string $site = null, ?string $environment = null, Form|string $form = null): bool
+    public function isCaptchaEnabled(?string $site = null, ?string $environment = null, Form|string|null $form = null): bool
     {
         $forms = GlobalSet::findByHandle('forms')
             ->in($site ?? Site::current()->handle);
