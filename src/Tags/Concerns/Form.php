@@ -70,7 +70,7 @@ trait Form
             return $this->context->get('validate', []);
         } else {
             $handle = $this->params->get('field', null);
-            if (! $handle) {
+            if (!$handle) {
                 throw new Exception('Missing "field" parameter in fuse:is_form_field_required.');
             }
 
@@ -91,14 +91,14 @@ trait Form
         $form = $this->params->get('form', null);
 
         // wig out if there is no "form" parameter
-        if (! $form) {
+        if (!$form) {
             throw new Exception('Missing "form" parameter in fuse:get_form_lang.');
         }
 
         $type = $this->params->get('type', null);
 
         // wig out if there is no "type" parameter
-        if (! $type) {
+        if (!$type) {
             throw new Exception('Missing "type" parameter in fuse:get_form_lang.');
         }
 
@@ -110,7 +110,6 @@ trait Form
         // submit button
         //
         if ($type === 'submit') {
-
             foreach ($global->get('submit_button_overrides', []) as $override) {
                 if ($override['form'] === $form) {
                     return $override['label'];
@@ -128,9 +127,14 @@ trait Form
         // get the default
         $message = $global->get($fieldHandle);
 
+        $handle = $form;
+        if (!is_string($handle) && method_exists($handle, 'handle')) {
+            $handle = $form->handle();
+        }
+
         // get the override
         foreach ($global->get('message_overrides', []) as $override) {
-            if ($override['form'] === $form->handle() && $override['type'] === $type) {
+            if ($override['form'] === $handle && $override['type'] === $type) {
                 $message = $override['message'];
             }
         }
@@ -143,7 +147,6 @@ trait Form
 
             return $content;
         } else {
-
             return Antlers::parse($message)->__toString();
         }
     }
