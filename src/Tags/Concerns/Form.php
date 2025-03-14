@@ -102,6 +102,11 @@ trait Form
             throw new Exception('Missing "type" parameter in fuse:get_form_lang.');
         }
 
+        $handle = $form;
+        if (!is_string($handle) && method_exists($handle, 'handle')) {
+            $handle = $form->handle();
+        }
+
         // get the defaults
         $global = GlobalSet::findByHandle('forms')
             ->in($this->context->get('site')->handle);
@@ -111,7 +116,7 @@ trait Form
         //
         if ($type === 'submit') {
             foreach ($global->get('submit_button_overrides', []) as $override) {
-                if ($override['form'] === $form) {
+                if ($override['form'] === $handle) {
                     return $override['label'];
                 }
             }
@@ -126,11 +131,6 @@ trait Form
 
         // get the default
         $message = $global->get($fieldHandle);
-
-        $handle = $form;
-        if (!is_string($handle) && method_exists($handle, 'handle')) {
-            $handle = $form->handle();
-        }
 
         // get the override
         foreach ($global->get('message_overrides', []) as $override) {
