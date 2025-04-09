@@ -13,6 +13,7 @@
          {{ else }}
          class="{{ class }}"
          {{ /if }}
+         {{ style ?= 'style="{{ style }}"' }}
          {{ unless alt }} aria-hidden="true" {{ /unless }}
          {{ if lazy }} loading="lazy" {{ /if }}
     >
@@ -37,6 +38,7 @@
          {{ else }}
          class="{{ class }}"
          {{ /if }}
+         {{ style ?= 'style="{{ style }}"' }}
          {{ unless alt }} aria-hidden="true" {{ /unless }}
          {{ if lazy }} loading="lazy" {{ /if }}
     >
