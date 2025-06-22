@@ -30,7 +30,7 @@ fields:
     field:
       max_files: 1
       mode: list
-      container: site
+      container: assets
       restrict: false
       allow_uploads: true
       show_filename: true
