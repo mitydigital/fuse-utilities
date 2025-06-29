@@ -5,6 +5,7 @@ namespace MityDigital\FuseUtilities\Tags\Concerns;
 use Illuminate\Support\Str;
 use MityDigital\FuseUtilities\Facades\FuseUtilities;
 use Statamic\Facades\Antlers;
+use Statamic\Facades\Blink;
 use Statamic\Facades\GlobalSet;
 use Statamic\Facades\Site;
 use Statamic\Fieldtypes\Bard;
@@ -14,11 +15,21 @@ trait Form
 {
     public function isCaptchaEnabled(): bool
     {
-        return FuseUtilities::isCaptchaEnabled(
-            environment: $this->context->get('environment'),
-            form: $this->params->get('form', null),
-            site: $this->context->get('site')->handle
-        );
+        if ($form = $this->params->get('form', null)) {
+            $enabled = FuseUtilities::isCaptchaEnabled(
+                environment: $this->context->get('environment'),
+                form: $form,
+                site: $this->context->get('site')->handle
+            );
+
+            if ($enabled) {
+                Blink::put('fuse_captcha_enabled', true);
+            }
+
+            return $enabled;
+        }
+
+        return Blink::get('fuse_captcha_enabled', false);
     }
 
     public function siteName(): string
