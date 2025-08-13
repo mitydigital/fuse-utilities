@@ -155,6 +155,8 @@ You can use `sm`, `md`, `lg`, `xl`, `2xl`, `3xl`, `4xl` and `5xl`.
 
 The `sizes` property defaults to `(min-width: 768px) 50vw, 100vw` but can be overridden per use case.
 
+You can pass `absolute` to the image partial to prefix the URLs with the value of `absolute`.
+
 ### JSON Schema
 
 Site metadata uses the JSON Schema function to output any schema details for the site. This is done by calling:

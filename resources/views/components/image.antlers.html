@@ -5,7 +5,7 @@
 
     <img alt="{{ alt | entities }}"
          height="{{ height }}"
-         src="{{ url }}"
+         src="{{ absolute }}{{ url }}"
          width="{{ width }}"
          {{ if cover }}
          class="object-cover w-full h-full {{ class }}"
@@ -22,7 +22,7 @@
 
     {{ foreach:formats as="format|mime_type" }}
     <source srcset="{{ srcset scope='size' }}
-                {{ glide:image :format='format' :width='size:width' :height='size:height' fit='{{ fit ?? 'crop_focal' }}' quality='{ size:quality }' }} {{ size:width }}w{{ !last ?= ',' }}
+                {{ absolute }}{{ glide:image :format='format' :width='size:width' :height='size:height' fit='{{ fit ?? 'crop_focal' }}' quality='{ size:quality }' }} {{ size:width }}w{{ !last ?= ',' }}
             {{ /srcset }}"
             sizes="{{ sizes ?? '(min-width: 768px) 50vw, 100vw' }}"
             type="{{ mime_type }}">
@@ -30,7 +30,7 @@
 
     <img alt="{{ alt | entities }}"
          height="{{ 1024 * original_ratio }}"
-         src="{{ glide:image width='1024' height='{ 1024 * original_ratio }' fit='{{ fit ?? 'crop_focal' }}' }}"
+         src="{{ absolute }}{{ glide:image width='1024' height='{ 1024 * original_ratio }' fit='{{ fit ?? 'crop_focal' }}' }}"
          width="1024"
          {{ if cover }}
          class="object-cover w-full h-full {{ class }}"
