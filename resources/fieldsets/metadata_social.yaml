@@ -9,7 +9,7 @@ fields:
       display: Title
       icon: text
       instructions: "The social sharing title. When omitted, will fall back to the entry's metadata title."
-      listable: hidden
+      listable: false
       instructions_position: above
       visibility: visible
       hide_display: false
@@ -21,7 +21,7 @@ fields:
       display: Description
       icon: textarea
       instructions: "This entry's social description. When omitted, will default to the entry's metadata description."
-      listable: hidden
+      listable: false
       instructions_position: above
       visibility: visible
       hide_display: false
@@ -39,7 +39,7 @@ fields:
       display: 'Social image'
       icon: assets
       instructions: "The entry-specific Social image. This overrides the site's default Social image. The recommended size is 1200x630px. This image will be focal cropped to this dimension."
-      listable: hidden
+      listable: false
       instructions_position: below
       visibility: visible
       hide_display: false
