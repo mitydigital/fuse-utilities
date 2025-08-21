@@ -11,7 +11,7 @@ fields:
       type: button_group
       display: 'Include in sitemap?'
       icon: button_group
-      listable: hidden
+      listable: false
       instructions_position: above
       visibility: visible
       hide_display: false
@@ -38,7 +38,7 @@ fields:
       type: select
       display: 'Change Frequency'
       icon: select
-      listable: hidden
+      listable: false
       instructions_position: above
       visibility: visible
       hide_display: false
@@ -50,7 +50,7 @@ fields:
       icon: float
       instructions: 'A value between 0.0 and 1.0. Leave blank to use default.'
       width: 33
-      listable: hidden
+      listable: false
       validate:
         - 'max:1'
         - 'min:0'

@@ -6,7 +6,7 @@ fields:
       input_type: text
       antlers: true
       type: text
-      display: Title
+      display: 'Metadata Title'
       icon: text
       instructions: "This entry's title, defaults to the entry title and site name when not explicitly set."
       listable: hidden
@@ -18,7 +18,7 @@ fields:
     field:
       antlers: true
       type: textarea
-      display: Description
+      display: 'Metadata Description'
       icon: textarea
       instructions: "This entry's meta description. Aim for around 160 characters."
       listable: hidden

@@ -9,7 +9,7 @@ fields:
       icon: toggle
       instructions: 'Instruct crawlers not to index this entry.'
       width: 50
-      listable: hidden
+      listable: false
       instructions_position: below
       visibility: visible
       hide_display: false
@@ -22,7 +22,7 @@ fields:
       icon: toggle
       instructions: 'Instruct crawlers not to follow links on this page.'
       width: 50
-      listable: hidden
+      listable: false
       instructions_position: below
       visibility: visible
       hide_display: false
@@ -38,7 +38,7 @@ fields:
       display: 'Canonical URL'
       icon: button_group
       instructions: 'Where should the canonical URL for this entry point to.'
-      listable: hidden
+      listable: false
       instructions_position: above
       visibility: visible
       hide_display: false
@@ -52,7 +52,7 @@ fields:
       display: Entry
       icon: entries
       instructions: 'When this entry contains duplicate content, set the Entry to be the original entry.'
-      listable: hidden
+      listable: false
       instructions_position: above
       visibility: visible
       hide_display: false
@@ -69,7 +69,7 @@ fields:
       display: 'External Canonical URL'
       icon: text
       instructions: 'What is the external canonical URL of this entry?'
-      listable: hidden
+      listable: false
       instructions_position: above
       visibility: visible
       hide_display: false
