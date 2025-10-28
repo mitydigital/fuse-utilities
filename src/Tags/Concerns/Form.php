@@ -8,19 +8,31 @@ use Statamic\Facades\Antlers;
 use Statamic\Facades\Blink;
 use Statamic\Facades\GlobalSet;
 use Statamic\Facades\Site;
+use Statamic\Fields\Field;
+use Statamic\Fields\Value;
 use Statamic\Fieldtypes\Bard;
 use Statamic\Fieldtypes\Bard\Augmentor;
+use Statamic\Modifiers\CoreModifiers;
 
 trait Form
 {
     public function isCaptchaEnabled(): bool
     {
         if ($form = $this->params->get('form', null)) {
-            $enabled = FuseUtilities::isCaptchaEnabled(
-                environment: $this->context->get('environment'),
-                form: $form,
-                site: $this->context->get('site')->handle
-            );
+            if ($this->context->count() === 0) {
+                $enabled = FuseUtilities::isCaptchaEnabled(
+                    environment: null,
+                    form: $form,
+                    site: Site::current()->handle
+                );
+            }
+            else {
+                $enabled = FuseUtilities::isCaptchaEnabled(
+                    environment: $this->context->get('environment'),
+                    form: $form,
+                    site: $this->context->get('site')->handle
+                );
+            }
 
             if ($enabled) {
                 Blink::put('fuse_captcha_enabled', true);
@@ -46,11 +58,12 @@ trait Form
 
     public function isFormFieldConditional(): bool
     {
-        foreach ($this->context->get('fields', []) as $field) {
-            if (array_key_exists('if', $field)) {
-                return true;
-            }
+        $field = $this->params->get('field', []);
+        //foreach ($this->context->get('fields', []) as $field) {
+        if (array_key_exists('if', $field)) {
+            return true;
         }
+        //}
 
         return false;
     }
@@ -77,12 +90,15 @@ trait Form
 
     protected function getFormFieldValidation(): array
     {
-        if ($this->context->get('field', null)) {
+        if ($this->params->has('validate')) {
+            return $this->params->get('validate', []);
+        }
+        elseif ($this->context->get('field', null)) {
             return $this->context->get('validate', []);
         } else {
             $handle = $this->params->get('field', null);
             if (!$handle) {
-                throw new Exception('Missing "field" parameter in fuse:is_form_field_required.');
+                throw new \Exception('Missing "field" parameter in fuse:is_form_field_required.');
             }
 
             foreach ($this->context->get('fields', []) as $field) {
@@ -120,7 +136,7 @@ trait Form
 
         // get the defaults
         $global = GlobalSet::findByHandle('forms')
-            ->in($this->context->get('site')->handle);
+            ->in($this->context->get('site') ? $this->context->get('site')->handle : Site::current()->handle);
 
         //
         // submit button
@@ -151,12 +167,14 @@ trait Form
         }
 
         if (is_array($message)) {
-            $bard = (new Bard)->setField($global->blueprint()->field($fieldHandle));
+            /*$bard = (new Bard)->setField($global->blueprint()->field($fieldHandle));
 
             $content = (new Augmentor($bard))
-                ->augment($message);
+                ->augment($message);*/
 
-            return $content;
+            return Antlers::parse((new CoreModifiers())->bardHtml($message));
+
+            //return $content;
         } else {
             return Antlers::parse($message)->__toString();
         }
