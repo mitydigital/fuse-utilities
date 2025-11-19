@@ -60,7 +60,7 @@ trait Form
     {
         $field = $this->params->get('field', []);
         //foreach ($this->context->get('fields', []) as $field) {
-        if (array_key_exists('if', $field)) {
+        if (array_key_exists('if', $field) || array_key_exists('unless', $field)) {
             return true;
         }
         //}
