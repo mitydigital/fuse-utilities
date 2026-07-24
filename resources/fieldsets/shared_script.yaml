@@ -1,0 +1,86 @@
+title: 'Shared: Script'
+fields:
+  -
+    handle: location
+    field:
+      options:
+        - key: body-end
+          value: 'Body - closing'
+        - key: body-start
+          value: 'Body - opening'
+        - key: head
+          value: Head
+      searchable: false
+      default: head
+      type: select
+      display: Location
+      width: 33
+      instructions_position: below
+      validate:
+        - required
+  -
+    handle: environment
+    field:
+      fullscreen: false
+      border: false
+      type: group
+      display: Environment
+      width: 66
+      hide_display: true
+      fields:
+        -
+          handle: follow
+          field:
+            options:
+              - key: custom
+                value: Custom
+              - key: default
+                value: 'Use defaults'
+            default: default
+            type: select
+            display: Environment
+            width: 33
+        -
+          handle: environment_spacer
+          field:
+            type: spacer
+            display: 'Environment Spacer'
+            width: 66
+        -
+          handle: enabled_on_local
+          field:
+            type: toggle
+            display: Local
+            width: 33
+            listable: false
+            if:
+              follow: 'equals custom'
+        -
+          handle: enabled_on_staging
+          field:
+            type: toggle
+            display: Staging
+            width: 33
+            listable: false
+            if:
+              follow: 'equals custom'
+        -
+          handle: enabled_on_production
+          field:
+            type: toggle
+            display: Production
+            width: 33
+            listable: false
+            if:
+              follow: 'equals custom'
+  -
+    handle: code
+    field:
+      mode_selectable: false
+      show_mode_label: false
+      type: code
+      display: Code/Script
+      instructions_position: below
+      validate:
+        - required
+        - 'new MityDigital\FuseUtilities\Rules\IsCodeFieldtypeHtml()'

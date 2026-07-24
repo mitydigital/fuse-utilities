@@ -14,6 +14,12 @@ These utilities are designed to work with Mity Digital's Fuse Starter Kit for St
 
 ## Commands
 
+Symlink (for play site)
+
+ln -s /Users/Marty/Code/starter-blade/vendor/fuse-utilities /Users/Marty/Code/statamic-addons/mitydigital/fuse-utilities/resources/dist
+
+
+
 ### Generate Tailwind
 
 The Generate Tailwind command can be run by running:

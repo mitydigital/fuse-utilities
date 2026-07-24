@@ -25,8 +25,7 @@ trait Form
                     form: $form,
                     site: Site::current()->handle
                 );
-            }
-            else {
+            } else {
                 $enabled = FuseUtilities::isCaptchaEnabled(
                     environment: $this->context->get('environment'),
                     form: $form,
@@ -59,11 +58,11 @@ trait Form
     public function isFormFieldConditional(): bool
     {
         $field = $this->params->get('field', []);
-        //foreach ($this->context->get('fields', []) as $field) {
+        // foreach ($this->context->get('fields', []) as $field) {
         if (array_key_exists('if', $field) || array_key_exists('unless', $field)) {
             return true;
         }
-        //}
+        // }
 
         return false;
     }
@@ -92,12 +91,11 @@ trait Form
     {
         if ($this->params->has('validate')) {
             return $this->params->get('validate', []);
-        }
-        elseif ($this->context->get('field', null)) {
+        } elseif ($this->context->get('field', null)) {
             return $this->context->get('validate', []);
         } else {
             $handle = $this->params->get('field', null);
-            if (!$handle) {
+            if (! $handle) {
                 throw new \Exception('Missing "field" parameter in fuse:is_form_field_required.');
             }
 
@@ -118,19 +116,19 @@ trait Form
         $form = $this->params->get('form', null);
 
         // wig out if there is no "form" parameter
-        if (!$form) {
+        if (! $form) {
             throw new Exception('Missing "form" parameter in fuse:get_form_lang.');
         }
 
         $type = $this->params->get('type', null);
 
         // wig out if there is no "type" parameter
-        if (!$type) {
+        if (! $type) {
             throw new Exception('Missing "type" parameter in fuse:get_form_lang.');
         }
 
         $handle = $form;
-        if (!is_string($handle) && method_exists($handle, 'handle')) {
+        if (! is_string($handle) && method_exists($handle, 'handle')) {
             $handle = $form->handle();
         }
 
@@ -172,9 +170,9 @@ trait Form
             $content = (new Augmentor($bard))
                 ->augment($message);*/
 
-            return Antlers::parse((new CoreModifiers())->bardHtml($message));
+            return Antlers::parse((new CoreModifiers)->bardHtml($message));
 
-            //return $content;
+            // return $content;
         } else {
             return Antlers::parse($message)->__toString();
         }

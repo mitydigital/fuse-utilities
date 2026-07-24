@@ -1,0 +1,51 @@
+title: 'Shared: Metadata - Structured'
+sections:
+  -
+    display: 'Structured data'
+    fields:
+      -
+        handle: structured_data
+        field:
+          button_label: 'Add data...'
+          type: replicator
+          display: 'Structured data'
+          sets:
+            types:
+              display: Types
+              sets:
+                json_ld:
+                  display: JSON-LD
+                  fields:
+                    -
+                      handle: code
+                      field:
+                        mode_selectable: false
+                        mode: javascript
+                        show_mode_label: false
+                        type: code
+                        display: Code
+                        instructions: |-
+                          Add custom structured data as valid JSON-LD only. Do not include the `<script>` tag — this is added automatically.
+
+                          Use `{{ $image }}` to have Statamic insert your selected image in to the schema - this will obviously require an image be selected.
+                        validate:
+                          - required
+                          - 'new MityDigital\FuseUtilities\Rules\IsJsonLdRule()'
+                    -
+                      handle: image
+                      field:
+                        container: assets
+                        max_files: 1
+                        type: assets
+                        display: Image
+                        instructions: 'If your JSON-LD data type is "Organization", ensure your logo fits within a square and works on a white background. For other use cases, your image dimensions should follow any reasonable aspect.'
+      -
+        handle: breadcrumbs
+        field:
+          default: true
+          type: toggle
+          display: Breadcrumbs
+          listable: false
+          instructions: |-
+            Include JSON-LD breadcrumbs. 
+            Recommended when no visual breadcrumbs are rendered to the page.

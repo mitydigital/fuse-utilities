@@ -1,0 +1,173 @@
+title: 'Shared: Metadata'
+sections:
+  -
+    display: Basic
+    fields:
+      -
+        handle: meta_title
+        field:
+          antlers: true
+          type: text
+          display: 'Metadata Title'
+          instructions: "This entry's title, defaults to the entry title and site name when not explicitly set."
+      -
+        handle: meta_description
+        field:
+          antlers: true
+          type: textarea
+          display: 'Metadata Description'
+          instructions: "This entry's meta description. Aim for around 160 characters."
+      -
+        handle: meta_include_title_suffix
+        field:
+          options:
+            include: Include
+            hide: Hide
+          default: include
+          type: button_group
+          display: 'Include site name?'
+          instructions: "When enabled, the site's name will be added automatically to the title tag. You can change the site name in the Settings."
+          listable: false
+  -
+    display: 'Social sharing'
+    collapsible: true
+    collapsed: true
+    fields:
+      -
+        handle: social_title
+        field:
+          antlers: true
+          type: text
+          display: Title
+          instructions: "The social sharing title. When omitted, will fall back to the entry's metadata title."
+          listable: false
+      -
+        handle: social_description
+        field:
+          antlers: true
+          type: textarea
+          display: Description
+          instructions: "This entry's social description. When omitted, will default to the entry's metadata description."
+          listable: false
+      -
+        handle: og_image
+        field:
+          max_files: 1
+          container: assets
+          type: assets
+          display: 'Social image'
+          instructions: "The entry-specific Social image. This overrides the site's default Social image. The recommended size is 1200x630px. This image will be focal cropped to this dimension."
+          listable: false
+          instructions_position: below
+  -
+    display: 'Structured data'
+    collapsible: true
+    collapsed: true
+    fields:
+      -
+        import: fuse-utilities::shared_metadata_structured
+  -
+    display: 'Search indexing'
+    collapsible: true
+    collapsed: true
+    fields:
+      -
+        handle: noindex
+        field:
+          type: toggle
+          display: 'No index'
+          instructions: 'Instruct crawlers not to index this entry.'
+          width: 50
+          listable: false
+          instructions_position: below
+      -
+        handle: nofollow
+        field:
+          type: toggle
+          display: 'No Follow'
+          instructions: 'Instruct crawlers not to follow links on this page.'
+          width: 50
+          listable: false
+          instructions_position: below
+      -
+        handle: canonical_type
+        field:
+          options:
+            current: 'Current Entry'
+            internal: 'Another Entry'
+            external: 'External URL'
+          default: current
+          type: button_group
+          display: 'Canonical URL'
+          instructions: 'Where should the canonical URL for this entry point to.'
+          listable: false
+      -
+        handle: canonical_entry
+        field:
+          max_items: 1
+          type: entries
+          display: Entry
+          instructions: 'When this entry contains duplicate content, set the Entry to be the original entry.'
+          listable: false
+          validate:
+            - 'required_if:canonical_type,internal'
+          if:
+            canonical_type: 'equals internal'
+      -
+        handle: canonical_url
+        field:
+          input_type: url
+          type: text
+          display: 'External Canonical URL'
+          instructions: 'What is the external canonical URL of this entry?'
+          listable: false
+          validate:
+            - 'required_if:canonical_type,external'
+            - url
+          if:
+            canonical_type: 'equals external'
+  -
+    display: Sitemap
+    collapsible: true
+    collapsed: true
+    fields:
+      -
+        handle: sitemap_include
+        field:
+          options:
+            default: 'Use default'
+            include: Include
+            exclude: Exclude
+          default: default
+          type: button_group
+          display: 'Include in sitemap?'
+          listable: false
+          validate:
+            - required
+      -
+        handle: sitemap_change_frequency
+        field:
+          options:
+            default: 'Use default'
+            always: 'Always (stock market data, social media)'
+            hourly: 'Hourly (major news site, weather, forums)'
+            daily: 'Daily (blog index, message boards)'
+            weekly: 'Weekly (product pages, directories)'
+            monthly: 'Monthly (FAQs, occasionally updated articles)'
+            yearly: 'Yearly (contact, about)'
+          push_tags: false
+          default: default
+          type: select
+          display: 'Change Frequency'
+          listable: false
+      -
+        handle: sitemap_priority
+        field:
+          display: Priority
+          type: float
+          instructions: 'A value between 0.0 and 1.0. Leave blank to use default.'
+          width: 33
+          listable: false
+          validate:
+            - 'max:1'
+            - 'min:0'
