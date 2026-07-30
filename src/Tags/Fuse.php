@@ -3,17 +3,11 @@
 namespace MityDigital\FuseUtilities\Tags;
 
 use MityDigital\FuseUtilities\Tags\Concerns\Form;
-use MityDigital\FuseUtilities\Tags\Concerns\Image;
-use MityDigital\FuseUtilities\Tags\Concerns\JsonSchema;
-use MityDigital\FuseUtilities\Tags\Concerns\Scripts;
 use Statamic\Tags\Tags;
 
 class Fuse extends Tags
 {
     use Form;
-    use Image;
-    use JsonSchema;
-    use Scripts;
 
     protected function getParamOrContext($key, $default = null)
     {

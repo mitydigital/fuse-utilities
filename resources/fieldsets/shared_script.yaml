@@ -83,4 +83,4 @@ fields:
       instructions_position: below
       validate:
         - required
-        - 'new MityDigital\FuseUtilities\Rules\IsCodeFieldtypeHtml()'
+        - 'new MityDigital\FuseUtilities\Rules\IsCodeFieldtypeHtmlRule()'

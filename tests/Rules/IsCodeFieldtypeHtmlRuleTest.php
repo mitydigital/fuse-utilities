@@ -1,13 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Validator;
-use MityDigital\FuseUtilities\Rules\IsCodeFieldtypeHtml;
+use MityDigital\FuseUtilities\Rules\IsCodeFieldtypeHtmlRule;
 
 function validateCodeFieldtypeHtml(mixed $value): Illuminate\Contracts\Validation\Validator
 {
     return Validator::make(
         ['content' => $value],
-        ['content' => [new IsCodeFieldtypeHtml]]
+        ['content' => [new IsCodeFieldtypeHtmlRule]]
     );
 }
 

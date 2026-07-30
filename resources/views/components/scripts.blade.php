@@ -1,6 +1,6 @@
 @blaze
 @props([
     'context' => [],
-    'location'
+    'location',
 ])
 {!! \MityDigital\FuseUtilities\Facades\Scripts::get($location, $context) !!}

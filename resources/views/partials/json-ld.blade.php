@@ -1,24 +1,23 @@
 {{-- Schemas --}}
 @php
     $schemas = [];
-    foreach($metadata->json_ld as $json_ld) {
+    foreach ($metadata->json_ld as $json_ld) {
         $width = 1920;
         $height = 1080;
 
         $schema = [
             '@context' => 'https://schema.org',
-            '@type' => match($json_ld->schema->value()) {
+            '@type' => match ($json_ld->schema->value()) {
                 'professional_service' => 'ProfessionalService',
                 'person' => 'Person',
                 'organization' => 'Organization',
-                default=> ''
+                default => ''
             },
             'name' => $json_ld->name,
             'url' => $homepage,
         ];
-        
-        if ($schema['@type'] === 'Organization')
-        {
+
+        if ($schema['@type'] === 'Organization') {
             $width = 1080;
         }
 
@@ -36,8 +35,7 @@
             $schema['logo'] = $image_url;
         }
 
-        if ($json_ld->schema->value() ==='custom')
-        {
+        if ($json_ld->schema->value() === 'custom') {
             $schema = $json_ld->json_ld->value();
 
             if ($image_url) {
@@ -54,9 +52,8 @@
             }
         }
 
-        $schemas[]= $schema;
+        $schemas[] = $schema;
     }
-
 @endphp
 @if (count($schemas))
     <script type="application/ld+json">
@@ -78,16 +75,15 @@
         $nav->setParameters([]);
 
         $breadcrumbs = [
-                '@context' => 'https://schema.org',
-                '@type' => 'BreadcrumbList',
-                'itemListElement' => collect($nav->breadcrumbs())->map(fn($breadcrumb, $index) => [
-                    '@type' => 'ListItem',
-                    'position' => $index,
-                    'name' => strip_tags($breadcrumb->title),
-                    'item' => $breadcrumb->permalink,
-                ])->toArray(),
+            '@context' => 'https://schema.org',
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => collect($nav->breadcrumbs())->map(fn ($breadcrumb, $index) => [
+                '@type' => 'ListItem',
+                'position' => $index,
+                'name' => strip_tags($breadcrumb->title),
+                'item' => $breadcrumb->permalink,
+            ])->toArray(),
         ];
-
     @endphp
     <script type="application/ld+json">
         {!! json_encode($breadcrumbs, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) !!}

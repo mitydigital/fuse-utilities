@@ -7,8 +7,6 @@ use MityDigital\FuseUtilities\Console\Commands\GenerateTailwindCommand;
 use MityDigital\FuseUtilities\Fieldtypes\SettingsFeatures;
 use MityDigital\FuseUtilities\Listeners\ImagesWithoutAltListener;
 use MityDigital\FuseUtilities\Listeners\PreventDeletingMountsListener;
-use MityDigital\FuseUtilities\Tags\Fuse;
-use MityDigital\FuseUtilities\Widgets\ImagesWithoutAlt;
 use Statamic\Events\EntryDeleting;
 use Statamic\Providers\AddonServiceProvider;
 
@@ -32,19 +30,11 @@ class ServiceProvider extends AddonServiceProvider
         ImagesWithoutAltListener::class,
     ];
 
-    /*protected $tags = [
-        Fuse::class,
-    ];*/
-
     protected $vite = [
         'input' => [
             'resources/js/cp.js',
         ],
         'publicDirectory' => 'resources/dist',
-    ];
-
-    protected $widgets = [
-        ImagesWithoutAlt::class,
     ];
 
     public function bootAddon()

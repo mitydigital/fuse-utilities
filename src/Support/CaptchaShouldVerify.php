@@ -3,7 +3,7 @@
 namespace MityDigital\FuseUtilities\Support;
 
 use AryehRaber\Captcha\Contracts\CustomShouldVerify;
-use MityDigital\FuseUtilities\Facades\FuseUtilities;
+use MityDigital\FuseUtilities\Facades\Forms;
 use Statamic\Events\FormSubmitted;
 
 class CaptchaShouldVerify implements CustomShouldVerify
@@ -14,7 +14,7 @@ class CaptchaShouldVerify implements CustomShouldVerify
         // FORM SUBMITTED
         //
         if ($event instanceof FormSubmitted) {
-            return FuseUtilities::isCaptchaEnabled(
+            return Forms::isCaptchaEnabled(
                 form: $event->submission->form()->handle()
             );
         }

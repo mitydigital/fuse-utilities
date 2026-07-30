@@ -5,7 +5,7 @@ namespace MityDigital\FuseUtilities\Rules;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class IsCodeFieldtypeHtml implements ValidationRule
+class IsCodeFieldtypeHtmlRule implements ValidationRule
 {
     /**
      * @var array<string, true>
