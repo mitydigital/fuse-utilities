@@ -1,10 +1,45 @@
-.idea
+
+# OS
 .DS_Store
+.AppleDouble
+.LSOverride
+Desktop.ini
+Thumbs.db
 
-node_modules
-vendor
+# Icon must end with two \r
+Icon
 
-.phpunit.result.cache
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# IDE
+/.idea
+/.nova
+/.vscode
+/.zed
+
+# Composer
+/auth.json
+
+/node_modules
+/vendor
+
 package-lock.json
 composer.lock
 .php_cs.cache
@@ -12,4 +47,33 @@ composer.lock
 
 resources/dist/hot
 
-.env
+.en
+.env.backup
+.env.production
+.php_cs.cache
+
+_ide_helper.php
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+
+*.log
+.phpactor.json
+.phpunit.result.cache
+/.phpunit.cache
+
+# Laravel Boost
+/boost.json
+/.mcp.json
+/AGENTS.md
+/CLAUDE.md
+/.claude/
+/.codex/
+/.cursor/
+/gemini/
+/junie/
+
+# Laravel IDE helper
+*.meta.*
+_ide_*
