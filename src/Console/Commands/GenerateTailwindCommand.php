@@ -50,9 +50,7 @@ class GenerateTailwindCommand extends Command
         // store the html here
         $html = [];
 
-        if ($tailwind === 3) {
-            $html = $this->generateV3($yaml);
-        } elseif ($tailwind === 4) {
+        if ($tailwind === 4) {
             $html = $this->generateV4($yaml);
         } else {
             $this->error('Unknown Tailwind version');
@@ -66,27 +64,6 @@ class GenerateTailwindCommand extends Command
         file_put_contents($target, $contents);
 
         $this->info('Huzzah! Your config has been generated auto-magically!');
-    }
-
-    protected function generateV3($yaml)
-    {
-        $html = [];
-
-        // start the loop
-        foreach ($yaml['colours'] as $colour) {
-            $classes = [];
-            foreach ($yaml['classes'] as $class) {
-                // merge the colour to the class
-                $classes[] = str_replace('[colour]', $colour, strtolower($class));
-            }
-
-            // add to the html
-            $html[] = '<div class="'.implode(' ', $classes).'"></div>';
-        }
-
-        $html[] = '<div class="'.implode(' ', Arr::get($yaml, 'standard', [])).'"></div>';
-
-        return $html;
     }
 
     protected function generateV4($yaml)

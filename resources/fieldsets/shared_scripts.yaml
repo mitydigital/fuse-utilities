@@ -1,0 +1,34 @@
+title: 'Shared: Scripts'
+sections:
+  -
+    display: 'Additional JavaScript'
+    instructions: 'These scripts will be applied to all pages of the site.'
+    fields:
+      -
+        handle: javascripts
+        field:
+          button_label: 'Add JavaScript...'
+          fullscreen: false
+          type: replicator
+          display: 'Additional JavaScript'
+          instructions: |-
+            Each script must be valid HTML, and can include script tags (to load additional JavaScript, such as for Analytics), or entire script blocks. 
+
+            If you're including JavaScript, you will require any necessary `<script>` tags - the editor is a HTML editor.
+          sets:
+            scripts:
+              display: 'Script type'
+              sets:
+                script:
+                  display: Script
+                  icon: programming-script-code-brackets
+                  fields:
+                    -
+                      handle: name
+                      field:
+                        type: text
+                        display: Name
+                        instructions: 'This is an internal name only, and can be used to label each script as a reminder for its purpose.'
+                        validate:
+                          - required
+                    - import: fuse-utilities::shared_script
