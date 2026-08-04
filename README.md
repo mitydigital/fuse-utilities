@@ -56,9 +56,6 @@ Supporting classes do the heavy lifting behind the scenes.
 
 There are Facades available for `Bard`, `Forms`, `Scripts` and `StructuredMetadata`.
 
-## Widgets
-
-
 ## Support
 
 This is designed for use with Mity Digital's Starter Kit for Statamic, which is not a public Starter Kit. 
