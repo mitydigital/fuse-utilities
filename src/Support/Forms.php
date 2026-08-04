@@ -4,6 +4,8 @@ namespace MityDigital\FuseUtilities\Support;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use MityDigital\FuseUtilities\Data\FormMessageData;
+use MityDigital\FuseUtilities\Data\FormMessagesData;
 use MityDigital\FuseUtilities\Exceptions\FormException;
 use MityDigital\FuseUtilities\Facades\Bard;
 use Statamic\Facades\GlobalSet;
@@ -61,7 +63,8 @@ class Forms
         return $enabled;
     }
 
-    protected function getField(array|string $handle): Field {
+    protected function getField(array|string $handle): Field
+    {
         if (! $this->form) {
             throw FormException::notSet();
         }
@@ -70,20 +73,21 @@ class Forms
             $handle = Arr::get($handle, 'handle');
         }
 
-        if (!$handle) {
+        if (! $handle) {
             throw FormException::missingHandle();
         }
 
         $field = $this->form->blueprint()->field($handle);
 
-        if (!$field) {
+        if (! $field) {
             throw FormException::fieldNotFound($handle, $this->form->handle());
         }
 
         return $field;
     }
 
-    public function isHoneypot(array|string $handle): bool {
+    public function isHoneypot(array|string $handle): bool
+    {
         if (! $this->form) {
             throw FormException::notSet();
         }
@@ -143,7 +147,8 @@ class Forms
         }
 
         $field = $this->getField($handle);
-        return Arr::hasAny($field->conditions() , ['if', 'unless']);
+
+        return Arr::hasAny($field->conditions(), ['if', 'unless']);
     }
 
     protected function loadGlobal(): void
@@ -152,13 +157,22 @@ class Forms
             ?->in(Site::current()->handle());
     }
 
-    public function getMessage(string $type): string
+    public function getMessages(): FormMessagesData
+    {
+        return new FormMessagesData(
+            error: $this->getMessage('error'),
+            success: $this->getMessage('success'),
+            validation: $this->getMessage('validation'),
+        );
+    }
+
+    public function getMessage(string $type): FormMessageData
     {
         if (! $this->form) {
             throw FormException::notSet();
         }
 
-        $fieldHandle = 'default_message_'.$type;
+        $fieldHandle = 'default_'.$type;
 
         // get the default
         $message = $this->global->get($fieldHandle);
@@ -166,11 +180,15 @@ class Forms
         // get the override
         foreach ($this->global->get('message_overrides', []) as $override) {
             if ($override['form'] === $this->form->handle() && $override['type'] === $type) {
-                $message = $override['message'];
+                $message = $override['override'];
             }
         }
 
-        return Bard::toHtml($message);
+        return new FormMessageData(
+            icon: Arr::get($message, 'icon'),
+            heading: Arr::get($message, 'heading'),
+            content: Bard::toHtml(Arr::get($message, 'content')),
+        );
     }
 
     public function getButton(string $key = 'submit'): string

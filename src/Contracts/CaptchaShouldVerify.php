@@ -1,6 +1,6 @@
 <?php
 
-namespace MityDigital\FuseUtilities\Support;
+namespace MityDigital\FuseUtilities\Contracts;
 
 use AryehRaber\Captcha\Contracts\CustomShouldVerify;
 use MityDigital\FuseUtilities\Facades\Forms;
