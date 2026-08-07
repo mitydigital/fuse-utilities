@@ -6,6 +6,8 @@ return [
     ],
 
     'image' => [
+        'default_width' => 350,
+
         'breakpoints' => [
             'sm' => 640,
             'md' => 768,

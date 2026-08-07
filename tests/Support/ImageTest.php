@@ -25,6 +25,7 @@ function imageAssetMock(string $extension = 'jpg', int $width = 2000, int $heigh
 beforeEach(function () {
     $this->imageUrlCalls = 0;
 
+    config()->set('fuse-utilities.image.default_width', 350);
     config()->set('fuse-utilities.image.breakpoints', [
         'sm' => 640,
         'md' => 768,
@@ -101,43 +102,50 @@ it('does not manipulate non-raster assets', function () {
         ->and($image->height)->toBe(800);
 });
 
-it('uses native-resolution crops when width is omitted but aspect ratio is provided', function () {
-    $image = Image::make(imageAssetMock('jpg', 1200, 800), [
-        'aspect_ratio' => '1/1 md:2/1',
-        'quality' => '70 md:60',
-    ]);
+it('uses configured widths when width is omitted', function () {
+    $image = Image::make(imageAssetMock('jpg', 2000, 1000));
 
-    expect($image->fallback)->toContain('/img/jpg')
-        ->and($image->fallback)->toContain('w=1200')
-        ->and($image->fallback)->toContain('h=600')
-        ->and($image->fallback_srcset)->toBeNull()
-        ->and($image->sizes)->toBeNull()
-        ->and($image->width)->toBe(1200)
-        ->and($image->height)->toBe(600)
-        ->and($image->sources)->toHaveCount(2)
-        ->and($image->sources[0]->media)->toBe('(min-width: 768px)')
-        ->and($image->sources[0]->sizes)->toBeNull()
-        ->and($image->sources[0]->srcset['webp'])->toHaveCount(1)
-        ->and($image->sources[0]->srcset['webp'][0]['descriptor'])->toBe('')
-        ->and($image->sources[0]->srcset['webp'][0]['url'])->toContain('w=1200')
-        ->and($image->sources[0]->srcset['webp'][0]['url'])->toContain('h=600')
-        ->and($image->sources[0]->srcset['jpg'][0]['url'])->toContain('w=1200')
-        ->and($image->sources[1]->media)->toBeNull()
-        ->and($image->sources[1]->srcset['webp'][0]['url'])->toContain('w=800')
-        ->and($image->sources[1]->srcset['webp'][0]['url'])->toContain('h=800')
-        ->and($image->fallback_srcset)->toBeNull();
+    expect($image->sizes)->toBe('(min-width: 1024px) 1024px, (min-width: 768px) 768px, (min-width: 640px) 640px, 350px')
+        ->and($image->sources)->toHaveCount(4)
+        ->and($image->sources[0]->media)->toBe('(min-width: 1024px)')
+        ->and($image->sources[0]->srcset['webp'][0]['descriptor'])->toBe('1024w')
+        ->and($image->sources[1]->media)->toBe('(min-width: 768px)')
+        ->and($image->sources[1]->srcset['webp'][0]['descriptor'])->toBe('768w')
+        ->and($image->sources[2]->media)->toBe('(min-width: 640px)')
+        ->and($image->sources[2]->srcset['webp'][0]['descriptor'])->toBe('640w')
+        ->and($image->sources[3]->media)->toBeNull()
+        ->and($image->sources[3]->srcset['webp'][0]['descriptor'])->toBe('350w')
+        ->and($image->fallback)->toContain('w=1024');
 });
 
-it('uses the untouched native asset when width and aspect ratio are omitted', function () {
-    $image = Image::make(imageAssetMock('jpg', 1200, 800));
+it('derives crop heights from default widths', function () {
+    $image = Image::make(imageAssetMock('jpg', 2000, 1000), [
+        'aspect_ratio' => '1/1 md:2/1',
+    ]);
 
-    expect($image->fallback)->toBe('/assets/example.jpg')
-        ->and($image->sources)->toHaveCount(1)
-        ->and($image->sources[0]->srcset['webp'][0]['url'])->toContain('fm=webp')
-        ->and($image->sources[0]->srcset['webp'][0]['url'])->not->toContain('w=')
-        ->and($image->sources[0]->srcset['webp'][0]['url'])->not->toContain('fit=')
-        ->and($image->sources[0]->srcset['jpg'][0]['url'])->toBe('/assets/example.jpg')
-        ->and($image->fallback_srcset)->toBeNull();
+    expect($image->sources[0]->srcset['webp'][0]['url'])->toContain('w=1024')
+        ->and($image->sources[0]->srcset['webp'][0]['url'])->toContain('h=512')
+        ->and($image->sources[3]->srcset['webp'][0]['url'])->toContain('w=350')
+        ->and($image->sources[3]->srcset['webp'][0]['url'])->toContain('h=350');
+});
+
+it('caps configured widths at the asset width', function () {
+    config()->set('fuse-utilities.image.breakpoints', [
+        'sm' => 640,
+        'md' => 768,
+        'lg' => 1024,
+        'xl' => 1280,
+        '2xl' => 1536,
+    ]);
+
+    $image = Image::make(imageAssetMock('jpg', 1000, 500));
+
+    expect($image->sizes)->toBe('(min-width: 1024px) 1000px, (min-width: 768px) 768px, (min-width: 640px) 640px, 350px')
+        ->and($image->sources)->toHaveCount(4)
+        ->and($image->sources[0]->media)->toBe('(min-width: 1024px)')
+        ->and($image->sources[0]->srcset['webp'])->toHaveCount(1)
+        ->and($image->sources[0]->srcset['webp'][0]['descriptor'])->toBe('1000w')
+        ->and($image->fallback)->toContain('w=1000');
 });
 
 it('uses the untouched native asset before a responsive width begins', function () {
