@@ -73,56 +73,39 @@ class Image
             );
         }
 
-        if (! $this->hasSize() && ! $this->hasAspectRatio()) {
-            return new ImageData(
-                fallback: $originalUrl,
-                fallback_srcset: null,
-                sizes: null,
-                alt: $this->alt(),
-                width: $width,
-                height: $height,
-                formats: $formats,
-                sources: $sources,
-            );
-        }
+        foreach ($rules as $rule) {
+            if ($rule['native']) {
+                continue;
+            }
 
-        if ($this->hasSize()) {
-            foreach ($rules as $rule) {
-                if ($rule['native']) {
+            foreach ($this->densities() as $density) {
+                $candidateWidth = min(
+                    $width,
+                    (int) round($rule['width'] * $density),
+                );
+
+                if ($candidateWidth < 1) {
                     continue;
                 }
 
-                foreach ($this->densities() as $density) {
-                    $candidateWidth = min(
-                        $width,
-                        (int) round($rule['width'] * $density),
-                    );
+                $candidate = [
+                    'url' => $this->url($candidateWidth, $rule['ratio'], $rule['quality'], $this->originalFormat(), $rule['native']),
+                    'descriptor' => $candidateWidth.'w',
+                ];
 
-                    if ($candidateWidth < 1) {
-                        continue;
-                    }
-
-                    $candidate = [
-                        'url' => $this->url($candidateWidth, $rule['ratio'], $rule['quality'], $this->originalFormat(), $rule['native']),
-                        'descriptor' => $candidateWidth.'w',
-                    ];
-
-                    $fallbackCandidates[$candidateWidth] = $candidate;
-                }
+                $fallbackCandidates[$candidateWidth] = $candidate;
             }
         }
 
-        if ($this->hasSize()) {
-            ksort($fallbackCandidates, SORT_NUMERIC);
-        }
+        ksort($fallbackCandidates, SORT_NUMERIC);
 
         $fallbackWidth = min($width, $largestRule['width']);
         $fallbackHeight = $this->heightFor($fallbackWidth, $largestRule['ratio']);
 
         return new ImageData(
             fallback: $this->url($fallbackWidth, $largestRule['ratio'], $largestRule['quality'], $this->originalFormat(), $largestRule['native']),
-            fallback_srcset: $this->hasSize() ? $this->srcsetString(array_values($fallbackCandidates)) : null,
-            sizes: $this->hasSize() ? $this->sizesAttribute($rules) : null,
+            fallback_srcset: $this->srcsetString(array_values($fallbackCandidates)),
+            sizes: $this->sizesAttribute($rules),
             alt: $this->alt(),
             width: $fallbackWidth,
             height: $fallbackHeight,
@@ -138,7 +121,7 @@ class Image
             && $this->asset->height() > 0;
     }
 
-    protected function hasSize(): bool
+    protected function hasWidth(): bool
     {
         return array_key_exists('width', $this->options)
             && $this->options['width'] !== null
@@ -192,22 +175,9 @@ class Image
     protected function responsiveRules(): array
     {
         $breakpoints = config('fuse-utilities.image.breakpoints', []);
-        if (! $this->hasSize()) {
-            $ratioValues = $this->responsiveRatios();
-            $rules = [$this->nativeRule(null, $ratioValues['base'])];
-
-            foreach ($breakpoints as $name => $breakpoint) {
-                if (! array_key_exists($name, $ratioValues)) {
-                    continue;
-                }
-
-                $rules[] = $this->nativeRule('(min-width: '.$breakpoint.'px)', $ratioValues[$name]);
-            }
-
-            return $rules;
-        }
-
-        $widthValues = $this->responsiveValues('width', null);
+        $widthValues = $this->hasWidth()
+            ? $this->responsiveValues('width', null)
+            : $this->defaultWidthValues();
         $ratioValues = $this->responsiveRatios();
         $qualityValues = $this->responsiveValues('quality', null);
         $rules = [];
@@ -263,6 +233,29 @@ class Image
             'sizes' => null,
             'native' => true,
         ];
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    protected function defaultWidthValues(): array
+    {
+        $assetWidth = $this->asset->width();
+        $widthValues = [
+            'base' => min((int) config('fuse-utilities.image.default_width', 350), $assetWidth),
+        ];
+
+        foreach (config('fuse-utilities.image.breakpoints', []) as $name => $breakpoint) {
+            $width = min((int) $breakpoint, $assetWidth);
+
+            if ($width <= $widthValues[array_key_last($widthValues)]) {
+                break;
+            }
+
+            $widthValues[$name] = $width;
+        }
+
+        return $widthValues;
     }
 
     /**
@@ -393,13 +386,6 @@ class Image
      */
     protected function candidates(array $rule, string $format): array
     {
-        if (! $this->hasSize()) {
-            return [[
-                'url' => $this->url($rule['width'], $rule['ratio'], null, $format, true),
-                'descriptor' => '',
-            ]];
-        }
-
         if ($rule['native']) {
             return [[
                 'url' => $this->url($rule['width'], $rule['ratio'], $rule['quality'], $format, true),
@@ -438,9 +424,9 @@ class Image
         if (! $native || $this->hasAspectRatio()) {
             $params = [
                 'w' => $width,
-                'h' => $this->hasSize()
-                    ? $this->heightFor($width, $ratio)
-                    : $this->nativeCropDimensions($ratio)['height'],
+                'h' => $native
+                    ? $this->nativeCropDimensions($ratio)['height']
+                    : $this->heightFor($width, $ratio),
                 'fit' => $this->fit(),
                 'fm' => $format,
             ];
