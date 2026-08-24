@@ -5,9 +5,9 @@ namespace MityDigital\FuseUtilities\Console\Commands;
 use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
 
-class ContentWithPathCommand extends Command
+class PathReferencesCommand extends Command
 {
-    protected $signature = 'fuse:content-with-path
+    protected $signature = 'fuse:path-references
                             {path=temp/ : The path to search for}';
 
     protected $description = 'Get a list of Statamic content that has a reference to a specific path.';

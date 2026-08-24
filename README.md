@@ -18,17 +18,17 @@ Symlink (for play site)
 
 ln -s /Users/Marty/Code/starter-blade/vendor/fuse-utilities /Users/Marty/Code/statamic-addons/mitydigital/fuse-utilities/resources/dist
 
-### Find assets (Content with Path)
+### Find assets (Path References)
 
 Use this command to create a list of files that contain a reference to the path. The default command looks for `temp/` (i.e. temp assets)
 
 ```shell
-php artisan fuse:content-with-path
+php artisan fuse:path-references
 ```
 
 You can pass your own path if you need too:
 ```shell
-php artisan fuse:content-with-path a/different/path 
+php artisan fuse:path-references a/different/path 
 ```
 
 This command will look at the site's source, and follow the `.gitignore` rules.
