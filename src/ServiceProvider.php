@@ -4,6 +4,7 @@ namespace MityDigital\FuseUtilities;
 
 use Illuminate\Support\Facades\Blade;
 use MityDigital\FuseUtilities\Console\Commands\GenerateTailwindCommand;
+use MityDigital\FuseUtilities\Contracts\ImageUrlGenerator;
 use MityDigital\FuseUtilities\Fieldtypes\SettingsFeatures;
 use MityDigital\FuseUtilities\Listeners\ImagesWithoutAltListener;
 use MityDigital\FuseUtilities\Listeners\PreventDeletingMountsListener;
@@ -12,6 +13,7 @@ use MityDigital\FuseUtilities\Support\Dialog;
 use MityDigital\FuseUtilities\Support\Forms;
 use MityDigital\FuseUtilities\Support\Image;
 use MityDigital\FuseUtilities\Support\Scripts;
+use MityDigital\FuseUtilities\Support\StatamicImageUrlGenerator;
 use MityDigital\FuseUtilities\Support\StructuredMetadata;
 use MityDigital\FuseUtilities\Support\Theme;
 use Statamic\Events\EntryDeleting;
@@ -85,6 +87,7 @@ class ServiceProvider extends AddonServiceProvider
 
     protected function bootSupport()
     {
+        $this->app->bind(ImageUrlGenerator::class, StatamicImageUrlGenerator::class);
         $this->app->scoped(Bard::class);
         $this->app->scoped(Dialog::class);
         $this->app->scoped(Forms::class);

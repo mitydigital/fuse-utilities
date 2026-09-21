@@ -1,5 +1,6 @@
 <?php
 
+use MityDigital\FuseUtilities\Contracts\ImageUrlGenerator;
 use MityDigital\FuseUtilities\Support\Image;
 use Statamic\Contracts\Assets\Asset;
 use Statamic\Facades\Image as ImageAPI;
@@ -162,6 +163,43 @@ it('uses the untouched native asset before a responsive width begins', function 
         ->and($image->sources[1]->srcset['jpg'][0]['url'])->toBe('/assets/example.jpg')
         ->and($image->sources[1]->srcset['webp'][0]['url'])->not->toContain('w=')
         ->and($image->sizes)->toBe('(min-width: 768px) 800px, 800px');
+});
+
+it('uses a registered URL generator for original and manipulated asset URLs', function () {
+    $calls = [];
+
+    app()->bind(ImageUrlGenerator::class, function () use (&$calls) {
+        return new class(function (array $params) use (&$calls): void {
+            $calls[] = $params;
+        }) implements ImageUrlGenerator
+        {
+            private Closure $record;
+
+            public function __construct(Closure $record)
+            {
+                $this->record = $record;
+            }
+
+            public function generate(Asset $asset, array $params = []): string
+            {
+                ($this->record)($params);
+
+                return '/protected/image?'.http_build_query($params);
+            }
+        };
+    });
+
+    $image = Image::make(imageAssetMock(), ['width' => 'md:800']);
+
+    expect($image->fallback)->toStartWith('/protected/image?')
+        ->and($image->sources[1]->srcset['jpg'][0]['url'])->toBe('/protected/image?')
+        ->and($calls)->toContain([])
+        ->and($calls)->toContain([
+            'w' => 800,
+            'h' => 400,
+            'fit' => 'crop',
+            'fm' => 'webp',
+        ]);
 });
 
 it('allows sizes to be overridden for fluid layouts', function () {
