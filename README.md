@@ -45,6 +45,65 @@ For example:
 
 Here, the aspect will be 3:2 and 350px wide on the smallest devices, 1:1 and 300px wide next, and 4:5 and 900px wide over the `lg` breakpoint.
 
+### Private images
+
+You can adjust the way that private assets get routed so that they can use a custom route, then get passed back to
+Statamic. This allows things like access control to be performed in the controller, which could even be signed and with
+an expiry date, and then Statamic can still internally handle its rendering.
+
+To use a protected route for a private container:
+
+1. Create an implementation of `MityDigital\FuseUtilities\Contracts\ImageUrlGenerator`.
+2. Return the package’s default URL generator for public assets, and your protected route URL for the private container.
+3. Bind your implementation to `ImageUrlGenerator::class` in your application's service provider.
+4. In the protected route controller, check access to the asset before serving the original image or passing validated image parameters to Statamic's `ImageGenerator`.
+
+The generator receives the asset and the requested Glide parameters, so responsive sizes, crops, quality settings, and image formats continue to work as normal.
+
+For example
+```php
+<?php
+
+namespace App\Images;
+
+use App\Support\Product;
+use MityDigital\FuseUtilities\Contracts\ImageUrlGenerator;
+use MityDigital\FuseUtilities\Support\StatamicImageUrlGenerator;
+use Statamic\Contracts\Assets\Asset;
+use Statamic\Support\Str;
+
+class ProjectImageUrlGenerator implements ImageUrlGenerator
+{
+    public function __construct(
+        private StatamicImageUrlGenerator $defaultGenerator,
+    ) {}
+
+    public function generate(Asset $asset, array $params = []): string
+    {
+        if ($asset->container()->handle() !== 'private') {
+            return $this->defaultGenerator->generate($asset, $params);
+        }
+
+        return url()->temporarySignedRoute('account.child.asset.image',
+            now()->addHours(2),
+            [
+                'asset' => Str::toBase64Url($asset->id()),
+                /* any other params that need to be added */
+                ...$params,
+            ]);
+    }
+}
+```
+
+Then in the `AppServiceProvider.php`:
+```php
+use App\Images\ProjectImageUrlGenerator;
+use MityDigital\FuseUtilities\Contracts\ImageUrlGenerator;
+
+$this->app->bind(ImageUrlGenerator::class, ProjectImageUrlGenerator::class);
+```
+
+
 ## Icons
 
 The Starter Kit is configured for Heroicons. 

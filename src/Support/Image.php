@@ -3,10 +3,10 @@
 namespace MityDigital\FuseUtilities\Support;
 
 use InvalidArgumentException;
+use MityDigital\FuseUtilities\Contracts\ImageUrlGenerator;
 use MityDigital\FuseUtilities\Data\ImageData;
 use MityDigital\FuseUtilities\Data\ImageSourceData;
 use Statamic\Contracts\Assets\Asset;
-use Statamic\Facades\Image as ImageAPI;
 
 class Image
 {
@@ -23,19 +23,22 @@ class Image
     public function __construct(
         protected Asset $asset,
         protected array $options = [],
-    ) {}
+        protected ?ImageUrlGenerator $urlGenerator = null,
+    ) {
+        $this->urlGenerator ??= app(ImageUrlGenerator::class);
+    }
 
     /**
      * @param  array<string, mixed>  $options
      */
     public static function make(Asset $asset, array $options = []): ImageData
     {
-        return (new self($asset, $options))->toData();
+        return (new self($asset, $options, app(ImageUrlGenerator::class)))->toData();
     }
 
     public function toData(): ImageData
     {
-        $originalUrl = $this->asset->url();
+        $originalUrl = $this->originalUrl();
         $width = $this->asset->width();
         $height = $this->asset->height();
 
@@ -416,7 +419,7 @@ class Image
     protected function url(int $width, float $ratio, ?int $quality, string $format, bool $native = false): string
     {
         if ($native && ! $this->hasAspectRatio() && $format === $this->originalFormat()) {
-            return $this->asset->url();
+            return $this->originalUrl();
         }
 
         $params = ['fm' => $format];
@@ -438,7 +441,12 @@ class Image
 
         $cacheKey = $format.'|'.http_build_query($params);
 
-        return $this->urlCache[$cacheKey] ??= ImageAPI::manipulate($this->asset, $params);
+        return $this->urlCache[$cacheKey] ??= $this->urlGenerator->generate($this->asset, $params);
+    }
+
+    protected function originalUrl(): string
+    {
+        return $this->urlCache['original'] ??= $this->urlGenerator->generate($this->asset);
     }
 
     protected function fit(): string
