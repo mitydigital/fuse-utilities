@@ -2,6 +2,7 @@
 
 namespace MityDigital\FuseUtilities\Support;
 
+use MityDigital\FuseUtilities\Facades\Html;
 use Statamic\Facades\Antlers;
 use Statamic\Facades\Cascade;
 use Statamic\Facades\Site;
@@ -29,5 +30,18 @@ class Bard
         }
 
         return html_entity_decode($html);
+    }
+
+    public function render(mixed $content, string $view = 'fuse.bard', bool $text = false)
+    {
+        $render = view($view, [
+            'content' => $content,
+        ])->render();
+
+        if (! $text) {
+            return $render;
+        }
+
+        return Html::toText($render);
     }
 }
