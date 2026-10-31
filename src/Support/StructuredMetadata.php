@@ -92,7 +92,7 @@ class StructuredMetadata
         $breadcrumbs = Arr::get($context, 'breadcrumbs');
         $segment_1 = Arr::get($context, 'segment_1');
 
-        if ($site_defaults->breadcrumbs && $breadcrumbs->value() !== false && $segment_1) {
+        if ($site_defaults->breadcrumbs && ($breadcrumbs === null || $breadcrumbs->value() !== false) && $segment_1) {
             $nav = app(Nav::class);
             $nav->setContext($context);
             $nav->setParameters([]);
