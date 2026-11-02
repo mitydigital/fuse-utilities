@@ -29,13 +29,13 @@ class Scripts
         $scripts = collect();
 
         $enabledForEnvironment =
-            ($environment === 'local' && $site_defaults->get('javascript_local', false)) ||
-            ($environment === 'staging' && $site_defaults->get('javascript_staging', false)) ||
-            ($environment === 'production' && $site_defaults->get('javascript_production', true));
+            ($environment === 'local' && $site_defaults?->get('javascript_local', false)) ||
+            ($environment === 'staging' && $site_defaults?->get('javascript_staging', false)) ||
+            ($environment === 'production' && $site_defaults?->get('javascript_production', true));
 
         // site settings
         $scripts = collect(array_merge(
-            $site_defaults->get('javascripts', []),
+            $site_defaults?->get('javascripts', []) ?? [],
             Arr::get($context, 'javascripts')?->raw() ?? []
         ))
             ->filter(function (array $javascript) use ($enabledForEnvironment, $environment, $location) {
