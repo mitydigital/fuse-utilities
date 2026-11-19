@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Blade;
 use MityDigital\FuseUtilities\Console\Commands\GenerateTailwindCommand;
 use MityDigital\FuseUtilities\Contracts\ImageUrlGenerator;
 use MityDigital\FuseUtilities\Fieldtypes\SettingsFeatures;
-use MityDigital\FuseUtilities\Listeners\ImagesWithoutAltListener;
 use MityDigital\FuseUtilities\Listeners\PreventDeletingMountsListener;
 use MityDigital\FuseUtilities\Support\Bard;
 use MityDigital\FuseUtilities\Support\Dialog;
@@ -33,10 +32,6 @@ class ServiceProvider extends AddonServiceProvider
         EntryDeleting::class => [
             PreventDeletingMountsListener::class,
         ],
-    ];
-
-    protected $subscribe = [
-        ImagesWithoutAltListener::class,
     ];
 
     protected $vite = [

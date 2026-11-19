@@ -11,6 +11,10 @@ class Theme
 
     protected $block = null;
 
+    /**
+     * @deprecated Only written by setTheme() and never read by this class. Kept so
+     *             subclasses that reference it keep working.
+     */
     protected $theme = null;
 
     public function hasBlock(): bool
@@ -55,6 +59,12 @@ class Theme
         return $this->settings()->theme?->value();
     }
 
+    /**
+     * @deprecated This method has never had any effect: getTheme() always reads the current
+     *             block's settings. Call clearBlock() after rendering a block instead, or pass
+     *             a theme directly to the method that needs it. Will be removed in the next
+     *             major version.
+     */
     public function setTheme(?string $theme = null): void
     {
         $this->theme = $theme;

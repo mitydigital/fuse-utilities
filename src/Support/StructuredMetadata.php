@@ -103,7 +103,7 @@ class StructuredMetadata
                 'itemListElement' => collect($nav->breadcrumbs())
                     ->map(fn ($breadcrumb, $index) => [
                         '@type' => 'ListItem',
-                        'position' => $index,
+                        'position' => $index + 1,
                         'name' => strip_tags($breadcrumb->title),
                         'item' => $breadcrumb->permalink,
                     ])
