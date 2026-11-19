@@ -1,6 +1,6 @@
 ---
 name: fuse-utilities
-description: "Use when building or changing front-end Blade templates, forms, scripts, SEO metadata or control panel blueprints in a Statamic site that uses the mitydigital/fuse-utilities package (Mity Digital's Fuse Starter Kit). Covers responsive images with <x-fuse-utilities::image>, private image URLs via ImageUrlGenerator, Bard and page builder rendering (Bard, PageBuilder, Html facades), search transformers, form helpers (Forms facade, captcha), script injection (<x-fuse-utilities::scripts>, Scripts facade), JSON-LD (StructuredMetadata facade), the @comment Blade directive, Dialog::registerId, the Theme base class, validation rules, custom control panel conditions and the fuse: artisan commands. Do not use for general Statamic or Laravel work that does not touch these features."
+description: "Use when building or changing front-end Blade templates, forms, scripts, SEO metadata or control panel blueprints in a Statamic site that uses the mitydigital/fuse-utilities package (Mity Digital's Fuse Starter Kit). Covers responsive images (the <x-fuse-utilities::image> component that project image components wrap, breakpoint widths and aspect ratios), private image URLs via ImageUrlGenerator, Bard and page builder rendering (Bard, PageBuilder, Html facades), search transformers, form helpers (Forms facade, captcha), script injection (<x-fuse-utilities::scripts>, Scripts facade), JSON-LD (StructuredMetadata facade), the @comment Blade directive, Dialog::registerId, the Theme base class, validation rules, custom control panel conditions and the fuse: artisan commands. Do not use for general Statamic or Laravel work that does not touch these features."
 ---
 
 # Fuse Utilities
@@ -31,8 +31,9 @@ them in other projects.
 
 ## Rules
 
-- Use `<x-fuse-utilities::image>` for content images instead of hand-writing `<picture>`, `srcset` or Glide tags.
-  Its width prop is `width`, not `size`.
+- Render content images through the project's image component when it has one that wraps
+  `<x-fuse-utilities::image>` (the Fuse Starter Kit's is `<x-image>`); otherwise use `<x-fuse-utilities::image>`.
+  Never hand-write `<picture>`, `srcset` or Glide tags. The package component's width prop is `width`, not `size`.
 - Facades (`Bard`, `Forms`, `Html`, `PageBuilder`, `Scripts`, `StructuredMetadata`) resolve request-scoped services.
   State added during a request (for example `Scripts::add()`, `StructuredMetadata::add()`, `Forms::setForm()`) is
   only visible later in that same request, so add it before the layout reads it.

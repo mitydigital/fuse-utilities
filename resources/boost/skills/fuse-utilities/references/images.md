@@ -1,5 +1,17 @@
 # Responsive images
 
+## Project wrappers
+
+- Check `resources/views/components/` for a project component that wraps the package one (for example an
+  `image.blade.php` that renders `<x-fuse-utilities::image>`, used as `<x-image>`). If there is one, use it in
+  templates.
+- Use `<x-fuse-utilities::image>` or `Image::make()` directly only when the wrapper can't produce the markup you
+  need.
+- The breakpoint syntax, configuration and behaviour below still apply to `width` and `aspect-ratio` values passed
+  through a wrapper.
+- A wrapper may not forward every prop (for example `quality`, `fit`, `sizes`, `alt` or `picture-class`). Read its
+  `@props` before relying on one.
+
 ## Blade component
 
 ```blade
