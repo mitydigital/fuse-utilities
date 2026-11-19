@@ -114,7 +114,11 @@ class Forms
         ));
     }
 
-    public function getFieldShowRequiredConditions(array|string $handle): string
+    /**
+     * Returns true when always required, false when not required, or an Alpine
+     * expression string (e.g. "form.contact_method == 'phone'") for required_if.
+     */
+    public function getFieldShowRequiredConditions(array|string $handle): string|bool
     {
         if ($this->isHoneypot($handle)) {
             return false;

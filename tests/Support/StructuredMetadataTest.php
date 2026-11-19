@@ -1,7 +1,9 @@
 <?php
 
+use Illuminate\Support\Fluent;
 use MityDigital\FuseUtilities\Support\StructuredMetadata;
 use Statamic\Tags\Glide;
+use Statamic\Tags\Nav;
 
 function decodeMetadata(string $json): array
 {
@@ -194,4 +196,36 @@ it('uses square dimensions for organization images', function () {
         '@type' => 'Organization',
         'logo' => 'https://example.com/img/assets/logo.jpg?w=1080&h=1080',
     ]);
+});
+
+it('numbers breadcrumb positions from 1', function () {
+    $this->mock(Nav::class, function ($mock) {
+        $mock->shouldReceive('setContext')->once();
+        $mock->shouldReceive('setParameters')->once()->with([]);
+        $mock->shouldReceive('breadcrumbs')->once()->andReturn([
+            (object) ['title' => 'Home', 'permalink' => 'https://example.com'],
+            (object) ['title' => '<b>Blog</b>', 'permalink' => 'https://example.com/blog'],
+        ]);
+    });
+
+    $result = (new StructuredMetadata)->breadcrumbs([
+        'site_defaults' => new Fluent(['breadcrumbs' => true]),
+        'breadcrumbs' => null,
+        'segment_1' => 'blog',
+    ]);
+
+    expect(decodeMetadata($result)['itemListElement'])->toBe([
+        ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => 'https://example.com'],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => 'Blog', 'item' => 'https://example.com/blog'],
+    ]);
+});
+
+it('returns false for breadcrumbs when disabled in site defaults', function () {
+    $result = (new StructuredMetadata)->breadcrumbs([
+        'site_defaults' => new Fluent(['breadcrumbs' => false]),
+        'breadcrumbs' => null,
+        'segment_1' => 'blog',
+    ]);
+
+    expect($result)->toBeFalse();
 });

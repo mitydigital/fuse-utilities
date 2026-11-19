@@ -14,7 +14,7 @@ class PreventDeletingMountsListener
     public function handle(EntryDeleting $event): void
     {
         if (app()->isProduction() && Collection::findByMount($event->entry)) {
-            throw new \Exception(trans('strings.collection_mounted', ['title' => $event->entry['title']]));
+            throw new \Exception(trans('fuse-utilities::strings.collection_mounted', ['title' => $event->entry['title']]));
         }
     }
 }

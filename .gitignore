@@ -68,6 +68,7 @@ yarn-error.log
 /.mcp.json
 /AGENTS.md
 /CLAUDE.md
+/.agents/
 /.claude/
 /.codex/
 /.cursor/

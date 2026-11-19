@@ -10,13 +10,16 @@
 
 > Utilities for Mity Digital's Fuse Starter Kit.
 
-These utilities are designed to work with Mity Digital's Fuse Starter Kit for Statamic.
+These utilities are designed to work with Mity Digital's Fuse Starter Kit for Statamic. Many helpers expect the
+globals, fieldsets and views that the Starter Kit installs.
+
+## AI agents (Laravel Boost)
+
+This package ships a [Laravel Boost](https://github.com/laravel/boost) guideline and a `fuse-utilities` skill in
+`resources/boost/`. Select `mitydigital/fuse-utilities` when running `php artisan boost:install` (or
+`boost:update`) and Boost will install them for your agents, such as Claude Code and Codex.
 
 ## Commands
-
-Symlink (for play site)
-
-ln -s /Users/Marty/Code/starter-blade/vendor/fuse-utilities /Users/Marty/Code/statamic-addons/mitydigital/fuse-utilities/resources/dist
 
 ### Find assets (Path References)
 
@@ -33,17 +36,50 @@ php artisan fuse:path-references a/different/path
 
 This command will look at the site's source, and follow the `.gitignore` rules.
 
+### Generate Tailwind safelist
+
+Reads `resources/tailwind/config.yaml` and writes `resources/tailwind/generated.html`, a file of complete class names
+for a set of colours and classes.
+
+```shell
+php artisan fuse:generate-tailwind
+```
+
+The YAML must set `version: 4`, and include `colours`, `classes` (using `[colour]` as the placeholder) and,
+optionally, `standard`.
+
 ## Images
 
 The Image helper has been created to make images easier to work with within the Tailwind landscape.
 
-You can pass `aspect-ratio` and `size` attributes with Tailwind-like strings to help change image size and aspect
-at different breakpoints. 
+You can pass `width` and `aspect-ratio` attributes with Tailwind-like strings to change the image width and aspect
+at different breakpoints.
 
 For example:
-`<x-fuse-utilities::image ... aspect-ratio="3/2 md:1/1 lg:4/5" size="350 md:300 lg:900" />`
 
-Here, the aspect will be 3:2 and 350px wide on the smallest devices, 1:1 and 300px wide next, and 4:5 and 900px wide over the `lg` breakpoint.
+```blade
+<x-fuse-utilities::image :asset="$image" width="350 md:300 lg:900" aspect-ratio="3/2 md:1/1 lg:4/5" />
+```
+
+Here, the aspect will be 3:2 and 350px wide on the smallest devices, 1:1 and 300px wide from `md`, and 4:5 and 900px
+wide from `lg`.
+
+| Prop            | Default      | Notes                                                                                                                         |
+|-----------------|--------------|-------------------------------------------------------------------------------------------------------------------------------|
+| `asset`         | required     | A Statamic `Asset`.                                                                                                           |
+| `width`         | `null`       | Tailwind-like widths in pixels, e.g. `350 md:600`. When omitted, widths come from `default_width` and the configured breakpoints. |
+| `aspect-ratio`  | `null`       | Tailwind-like `width/height` ratios, e.g. `16/9 lg:3/1`. When omitted, the asset's own ratio is used.                         |
+| `quality`       | `null`       | Tailwind-like Glide quality, e.g. `80 lg:70`.                                                                                 |
+| `fit`           | `crop_focal` | Glide fit. `crop_focal` uses the asset's focal point.                                                                         |
+| `sizes`         | `null`       | Overrides the generated `sizes` attribute, e.g. `100vw` for fluid layouts.                                                    |
+| `alt`           | asset `alt`  | Overrides the asset's alt text.                                                                                               |
+| `class`         | `null`       | Classes for the `<img>`.                                                                                                      |
+| `picture-class` | `null`       | Classes for the `<picture>`.                                                                                                  |
+| `style`         | `null`       | Inline style for the `<img>`.                                                                                                 |
+| `loading`       | `lazy`       |                                                                                                                               |
+| `decoding`      | `async`      |                                                                                                                               |
+
+Breakpoints, the default width, the default fit and pixel densities are set in `config/fuse-utilities.php`.
 
 ### Private images
 
@@ -103,19 +139,6 @@ use MityDigital\FuseUtilities\Contracts\ImageUrlGenerator;
 $this->app->bind(ImageUrlGenerator::class, ProjectImageUrlGenerator::class);
 ```
 
-
-## Icons
-
-The Starter Kit is configured for Heroicons. 
-
-There is a command that helps set this up.
-
-Basically this setup command helps hook up the Tailwind Icons with the site's Iconamic fieldtype.
-
-On the frontend, we use Blade UI Icons, not Iconamic. But for the CP, we use Iconamic to get a preview of the icon. 
-
-If Heroicons is not used, speak to Marty about setting up.
-
 ## Listeners
 
 ### Prevent Deleting Mounts
@@ -128,7 +151,10 @@ This only runs when the app is in Production mode. In local dev mode, you can st
 
 Supporting classes do the heavy lifting behind the scenes.
 
-There are Facades available for `Bard`, `Forms`, `Scripts` and `StructuredMetadata`.
+There are Facades available for `Bard`, `Forms`, `Html`, `PageBuilder`, `Scripts` and `StructuredMetadata`.
+
+`Support\Theme` is a base class: the Starter Kit extends it as `App\Support\Theme`. `Support\Dialog::registerId()`
+ensures dialog ids are unique within a request.
 
 ## Support
 
@@ -142,4 +168,4 @@ There is no support for provided for this Add-on.
 
 ## License
 
-This addon is licensed under the MIT license.
+This addon is licensed under the GPL-3.0 license.
