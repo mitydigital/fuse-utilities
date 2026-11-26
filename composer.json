@@ -34,8 +34,7 @@
         "laravel/pint": "^1.10",
         "pestphp/pest": "^5.0",
         "pestphp/pest-plugin-laravel": "^5.0",
-        "laravel/boost": "^2.4",
-        "livewire/livewire": "^4.0"
+        "laravel/boost": "^2.4"
     },
     "suggest": {
         "livewire/livewire": "Scripts added while a Livewire component renders are loaded as Livewire assets (^4.0)."

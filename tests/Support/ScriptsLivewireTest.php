@@ -1,30 +1,28 @@
 <?php
 
-use Livewire\Component;
 use Livewire\Livewire;
 use MityDigital\FuseUtilities\Facades\Scripts as ScriptsFacade;
 use MityDigital\FuseUtilities\Support\Scripts;
+use MityDigital\FuseUtilities\Tests\Fixtures\ScriptsLivewireComponent;
 
-class ScriptsLivewireTestComponent extends Component
-{
-    public function render(): string
-    {
-        return <<<'BLADE'
-            <div>
-                @php(\MityDigital\FuseUtilities\Facades\Scripts::add('<script src="/livewire-library.js"></script>', key: 'library'))
-            </div>
-        BLADE;
+/*
+ * Livewire is optional for this package, so it is not a dependency. These tests run when it is installed, for example
+ * with `composer require --dev livewire/livewire` (without committing the change), and skip otherwise.
+ */
+beforeEach(function () {
+    if (! class_exists(Livewire::class)) {
+        $this->markTestSkipped('Livewire is not installed.');
     }
-}
+});
 
 it('loads code added while a Livewire component renders as a Livewire asset', function () {
-    $component = Livewire::test(ScriptsLivewireTestComponent::class);
+    $component = Livewire::test(ScriptsLivewireComponent::class);
 
     expect($component->snapshot['memo']['assets'])->toBe([Scripts::LIVEWIRE_ASSET_KEY_PREFIX.'library']);
 });
 
 it('keeps the Livewire asset when the component updates', function () {
-    $component = Livewire::test(ScriptsLivewireTestComponent::class)->call('$refresh');
+    $component = Livewire::test(ScriptsLivewireComponent::class)->call('$refresh');
 
     expect($component->snapshot['memo']['assets'])->toBe([Scripts::LIVEWIRE_ASSET_KEY_PREFIX.'library']);
 });
@@ -32,7 +30,7 @@ it('keeps the Livewire asset when the component updates', function () {
 it('does not output code in the layout once Livewire loads it', function () {
     ScriptsFacade::add('<script src="/layout-library.js"></script>', key: 'library');
 
-    Livewire::test(ScriptsLivewireTestComponent::class);
+    Livewire::test(ScriptsLivewireComponent::class);
 
     ScriptsFacade::add('<script src="/layout-library.js"></script>', key: 'library');
 

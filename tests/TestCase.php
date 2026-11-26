@@ -16,7 +16,8 @@ abstract class TestCase extends AddonTestCase
     {
         return [
             BlazeServiceProvider::class,
-            LivewireServiceProvider::class,
+            // Livewire is optional, so only register it when it is installed
+            ...(class_exists(LivewireServiceProvider::class) ? [LivewireServiceProvider::class] : []),
             ...parent::getPackageProviders($app),
         ];
     }
