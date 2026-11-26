@@ -18,6 +18,21 @@ Most methods need a form to be set first, otherwise they throw `MityDigital\Fuse
 
 `$form` is a `Statamic\Forms\Form` (e.g. `Statamic\Facades\Form::find('contact')`).
 
+## Element ids
+
+Field ids come from field handles, so rendering the same form twice on one page would repeat every id, and the second
+form's labels would point at (and toggle) the first form's controls. Each `setForm()` call starts a new instance of
+the form with its own id prefix: `{form_handle}_{n}_`, counted per form handle for the request.
+
+| Method | Returns |
+|---|---|
+| `getIdPrefix()` | The current form's prefix, such as `contact_1_` (then `contact_2_` for the next `contact` form). |
+| `getFieldId($field)` | The prefixed id for a field handle (or a field array, or any other string), such as `contact_1_email`. |
+
+Use `getFieldId()` for every element `id` and label `for` in the form, and keep the input `name` as the bare handle.
+Both throw `FormException` when no form is set. Script that finds a field by id (such as an error summary link)
+should read the prefix from the form element, for example from a `data-id-prefix` attribute.
+
 ## Field helpers
 
 Each accepts a field handle, or a field array containing a `handle` key (as you get when looping over form fields).

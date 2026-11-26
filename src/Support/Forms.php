@@ -19,14 +19,62 @@ class Forms
 
     protected $form = null;
 
+    /**
+     * How many times each form has been set during this request, keyed by form handle.
+     *
+     * @var array<string, int>
+     */
+    protected array $instances = [];
+
+    protected ?string $idPrefix = null;
+
+    /**
+     * Set the form being rendered. Each call starts a new instance of the form with its own element id prefix, so the
+     * same form can be rendered more than once on a page without repeating ids.
+     */
     public function setForm(Form $form)
     {
         $this->form = $form;
+
+        $handle = $form->handle();
+
+        $this->instances[$handle] = ($this->instances[$handle] ?? 0) + 1;
+
+        $this->idPrefix = $handle.'_'.$this->instances[$handle].'_';
     }
 
     public function clearForm()
     {
         $this->form = null;
+        $this->idPrefix = null;
+    }
+
+    /**
+     * The element id prefix of the form being rendered, such as "contact_1_" for the first "contact" form on the page.
+     */
+    public function getIdPrefix(): string
+    {
+        if (! $this->form) {
+            throw FormException::notSet();
+        }
+
+        return $this->idPrefix;
+    }
+
+    /**
+     * The element id for a field (or any other element) of the form being rendered, such as "contact_1_email".
+     */
+    public function getFieldId(array|string $handle): string
+    {
+        if (is_array($handle)) {
+            $handle = Arr::get($handle, 'handle');
+        }
+
+        if (! $handle) {
+            throw FormException::missingHandle();
+        }
+
+        return $this->getIdPrefix().$handle;
     }
 
     protected function global(): string
