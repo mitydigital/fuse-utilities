@@ -3,12 +3,24 @@
 namespace MityDigital\FuseUtilities\Tests;
 
 use Illuminate\Encryption\Encrypter;
+use Livewire\Blaze\BlazeServiceProvider;
+use Livewire\LivewireServiceProvider;
 use MityDigital\FuseUtilities\ServiceProvider;
 use Statamic\Testing\AddonTestCase;
 
 abstract class TestCase extends AddonTestCase
 {
     protected string $addonServiceProvider = ServiceProvider::class;
+
+    protected function getPackageProviders($app)
+    {
+        return [
+            BlazeServiceProvider::class,
+            // Livewire is optional, so only register it when it is installed
+            ...(class_exists(LivewireServiceProvider::class) ? [LivewireServiceProvider::class] : []),
+            ...parent::getPackageProviders($app),
+        ];
+    }
 
     protected function resolveApplicationConfiguration($app)
     {
