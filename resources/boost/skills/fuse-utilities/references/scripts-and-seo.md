@@ -22,16 +22,33 @@ Sources, in output order:
 
 1. **Site-wide**: the `javascripts` replicator on the `site_defaults` global.
 2. **Per page**: the entry's `javascripts` field.
-3. **Added in code** during the request:
+3. **Added in code** during the request, with `Scripts::add()`. It takes a "Script" entry or a string of HTML:
 
    ```php
    use MityDigital\FuseUtilities\Facades\Scripts;
 
    Scripts::add($scriptEntry); // a Statamic Entry with `location` and `code` fields
+
+   Scripts::add('<script src="/vendor/library.js" data-navigate-once></script>'); // body-end
+   Scripts::add('<script src="/vendor/library.js"></script>', 'head', key: 'library');
    ```
 
-   Call `add()` before the layout renders that location (e.g. in a block partial that renders before
-   `body-end`). Each entry is only added once per request.
+   - An entry uses its own `location`, and its id as the key. An entry without a valid location is ignored.
+   - A string goes to `$location` (default `body-end`; anything other than `head`, `body-start` or `body-end` throws).
+     Its key defaults to a hash of the code, so the same code is only output once. Pass `key:` when different code
+     should replace it, or to make the intent clear.
+   - Each key is output once per request, however many times it is added (no `@once` needed).
+   - Added scripts are output after sources 1 and 2, and ignore the environment rules below.
+   - Call `add()` before the layout renders that location. A component or block in the page body is fine: the body
+     renders before the layout.
+   - Use it instead of outputting a `<script>` from a component or block.
+
+   **Livewire.** When Livewire is installed and a Livewire component is rendering, `add()` loads the script as a
+   Livewire asset (as `@assets` does) instead of through the layout. Livewire then loads it once per page, in the
+   `<head>` (so `$location` is ignored), including when the component renders in a Livewire update (lazy and deferred
+   components, islands, components a parent adds). Sites without Livewire, and code outside Livewire components, use
+   the layout as above. With `wire:navigate`, Livewire runs `<body>` scripts again on every page; add
+   `data-navigate-once` to a library's `<script>` tag so it only runs once.
 
 Environment rules for sources 1 and 2:
 
