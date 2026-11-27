@@ -155,7 +155,11 @@ class Forms
 
         $field = $this->getField($handle);
 
-        return (bool) Arr::first($field->rules()[$handle] ?? [], fn (string $rule) => in_array(
+        /*
+         * Fieldtypes can add rule objects (such as Statamic's time fieldtype), which are never "required", so only
+         * string rules are checked.
+         */
+        return (bool) Arr::first($field->rules()[$handle] ?? [], fn (mixed $rule) => is_string($rule) && in_array(
             Str::before(strtolower($rule), ':'),
             ['required', 'required_if'],
             true,
@@ -175,6 +179,11 @@ class Forms
         $field = $this->getField($handle);
 
         foreach ($field->rules()[$handle] ?? [] as $rule) {
+            // rule objects (such as Statamic's time fieldtype rule) are never "required"
+            if (! is_string($rule)) {
+                continue;
+            }
+
             // required - easy
             if ($rule === 'required') {
                 return true;
