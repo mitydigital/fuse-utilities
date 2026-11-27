@@ -2,6 +2,7 @@
 
 use MityDigital\FuseUtilities\Exceptions\FormException;
 use MityDigital\FuseUtilities\Support\Forms;
+use Statamic\Facades\Blueprint;
 use Statamic\Facades\Form;
 
 it('prefixes field ids with the form handle and instance', function () {
@@ -56,3 +57,52 @@ it('throws for a field id without a handle', function () {
 
     $forms->getFieldId(['display' => 'Email']);
 })->throws(FormException::class);
+
+/**
+ * Makes a "contact" form whose blueprint has the given fields.
+ *
+ * @param  array<string, array<string, mixed>>  $fields
+ */
+function makeFormWithFields(array $fields): Statamic\Contracts\Forms\Form
+{
+    Blueprint::make('contact')
+        ->setNamespace('forms')
+        ->setContents(['fields' => collect($fields)->map(fn (array $field, string $handle) => [
+            'handle' => $handle,
+            'field' => $field,
+        ])->values()->all()])
+        ->save();
+
+    return Form::make('contact');
+}
+
+it('reads required from string rules', function () {
+    $forms = new Forms;
+
+    $forms->setForm(makeFormWithFields([
+        'name' => ['type' => 'text', 'validate' => ['required']],
+        'company' => ['type' => 'text', 'validate' => ['required_if:type,business']],
+        'notes' => ['type' => 'textarea'],
+    ]));
+
+    expect($forms->isFieldRequired('name'))->toBeTrue()
+        ->and($forms->isFieldRequired('company'))->toBeTrue()
+        ->and($forms->isFieldRequired('notes'))->toBeFalse()
+        ->and($forms->getFieldShowRequiredConditions('name'))->toBeTrue()
+        ->and($forms->getFieldShowRequiredConditions('company'))->toBe("form.type == 'business'")
+        ->and($forms->getFieldShowRequiredConditions('notes'))->toBeFalse();
+});
+
+it('ignores rule objects a fieldtype adds when reading required', function () {
+    $forms = new Forms;
+
+    $forms->setForm(makeFormWithFields([
+        'start' => ['type' => 'time', 'validate' => ['required']],
+        'finish' => ['type' => 'time'],
+    ]));
+
+    expect($forms->isFieldRequired('start'))->toBeTrue()
+        ->and($forms->isFieldRequired('finish'))->toBeFalse()
+        ->and($forms->getFieldShowRequiredConditions('start'))->toBeTrue()
+        ->and($forms->getFieldShowRequiredConditions('finish'))->toBeFalse();
+});
